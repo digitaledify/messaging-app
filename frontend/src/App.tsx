@@ -24,6 +24,7 @@ import Comments from "./components/Comments";
 import { useLocalStorage, useHotkeys } from "@mantine/hooks";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
+import { NotificationsProvider } from "@mantine/notifications";
 
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -38,7 +39,6 @@ function App() {
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
   return (
-    
     <ColorSchemeProvider
       colorScheme={colorScheme}
       toggleColorScheme={toggleColorScheme}
@@ -50,45 +50,46 @@ function App() {
           colorScheme,
         }}
       >
-        <AppShell
-          fixed
-          padding={0}
-          aside={<NavbarSearch />}
-          styles={{
-            main: {
-              overflow: "hidden",
-              height: "100vh",
-            },
-          }}
-        >
-          <Stack
-            align={"stretch"}
-            sx={{ height: "100vh" }}
-            pb="md"
-            px={"md"}
-            spacing={"md"}
-            justify={"space-between"}
+        <NotificationsProvider>
+          <AppShell
+            fixed
+            padding={0}
+            aside={<NavbarSearch />}
+            styles={{
+              main: {
+                overflow: "hidden",
+                height: "100vh",
+              },
+            }}
           >
-            <Box>
-              <UserButton
-                image="https://i.imgur.com/fGxgcDF.png"
-                name="Bob Rulebreaker"
-                email="Product owner"
-                icon={<IconSelector size={14} stroke={1.5} />}
-              />
-              <Divider mx={"-md"} />
-            </Box>
+            <Stack
+              align={"stretch"}
+              sx={{ height: "100vh" }}
+              pb="md"
+              px={"md"}
+              spacing={"md"}
+              justify={"space-between"}
+            >
+              <Box>
+                <UserButton
+                  image="https://i.imgur.com/fGxgcDF.png"
+                  name="Bob Rulebreaker"
+                  email="Product owner"
+                  icon={<IconSelector size={14} stroke={1.5} />}
+                />
+                <Divider mx={"-md"} />
+              </Box>
 
-            <Comments />
-            <Box>
-              <Textarea />
-              <Space h={10} />
-            </Box>
-          </Stack>
-        </AppShell>
+              <Comments />
+              <Box>
+                <Textarea />
+                <Space h={10} />
+              </Box>
+            </Stack>
+          </AppShell>
+        </NotificationsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
-
   );
 }
 
