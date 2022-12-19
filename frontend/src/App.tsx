@@ -22,6 +22,8 @@ import { IconSelector } from "@tabler/icons";
 import { UserButton } from "./components/UserButton";
 import Comments from "./components/Comments";
 import { useLocalStorage, useHotkeys } from "@mantine/hooks";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
 
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -36,6 +38,7 @@ function App() {
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
   return (
+    
     <ColorSchemeProvider
       colorScheme={colorScheme}
       toggleColorScheme={toggleColorScheme}
@@ -85,6 +88,7 @@ function App() {
         </AppShell>
       </MantineProvider>
     </ColorSchemeProvider>
+
   );
 }
 
