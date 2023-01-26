@@ -1,6 +1,6 @@
 export interface AuthState {
-  user: User | null;
-  token: string | null;
+  user?: User;
+  token?: string;
 }
 
 export interface User {
@@ -11,3 +11,4 @@ export interface User {
   created_at: string;
   updated_at: string;
 }
+

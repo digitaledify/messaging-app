@@ -1,5 +1,4 @@
 import { z } from "zod";
-import appConfig from "../config.json";
 
 const configSchema = z.object({
   port: z.number().default(8080),
@@ -14,7 +13,4 @@ const configSchema = z.object({
 
 export type Config = z.infer<typeof configSchema>;
 
-export const config = configSchema.parse({
-  ...appConfig,
-  ...process.env, // Overwrite with environment variables
-});
+export const config = configSchema.parse(process.env);

@@ -22,9 +22,10 @@ import { IconSelector } from "@tabler/icons";
 import { UserButton } from "./components/UserButton";
 import Comments from "./components/Comments";
 import { useLocalStorage, useHotkeys } from "@mantine/hooks";
-import { RouterProvider } from "react-router-dom";
+import { RouterProvider, useNavigate } from "react-router-dom";
 import router from "./router";
 import { NotificationsProvider } from "@mantine/notifications";
+import useAuth from "./hooks/useAuth";
 
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -32,11 +33,18 @@ function App() {
     defaultValue: "light",
     getInitialValueInEffect: true,
   });
-
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
+  // Register shortcuts
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
+
+  // Redirect to signin if not logged in
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
+    navigate("/sign-in");
+  }
 
   return (
     <ColorSchemeProvider

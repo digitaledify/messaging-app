@@ -7,6 +7,7 @@ import {
   Group,
 } from "@mantine/core";
 import { Link, useRouteError } from "react-router-dom";
+import { isRouteErrorResponse } from "react-router-dom";
 import { z } from "zod";
 
 const useStyles = createStyles((theme) => ({
@@ -56,6 +57,12 @@ export function ErrorPage() {
 
   console.error(error);
 
+  if (!isRouteErrorResponse(error) && import.meta.env.MODE === "development") {
+    throw new Error("ErrorPage: Invalid error", {
+      cause: error,
+    });
+  }
+
   const parsedError = z
     .object({
       statusText: z.string().optional(),
@@ -65,7 +72,7 @@ export function ErrorPage() {
     })
     .parse(error);
 
-  const { statusText, message, status, data } = parsedError;
+  const { statusText, status, data } = parsedError;
 
   return (
     <Container className={classes.root}>
@@ -77,7 +84,7 @@ export function ErrorPage() {
         align="center"
         className={classes.description}
       >
-        {message || data || "The page you are looking for does not exist"}
+        {data || "The page you are looking for does not exist"}
       </Text>
       <Group position="center">
         <Button variant="subtle" component={Link} to="/" size="md">

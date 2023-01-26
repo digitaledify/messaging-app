@@ -10,9 +10,49 @@ import {
   Group,
   Button,
 } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import useAuth from "../hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import QueryKeys from "../lib/query-keys";
+import http from "../lib/http";
+import { SignInDataSchema } from "../lib/zod-schemas";
+
+type SignInFormData = z.infer<typeof SignInDataSchema>;
 
 export function SignIn() {
+  const navigate = useNavigate();
+  const { isAuthenticated, signIn } = useAuth();
+  const mutation = useMutation({
+    mutationKey: [QueryKeys.auth.sign_in],
+    mutationFn: async (data: SignInFormData) => {
+      const res = await http.post("/sign-in", data);
+      return res.data;
+    },
+    onSuccess(data, variables) {
+      signIn(data, variables.rememberMe);
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(SignInDataSchema),
+  });
+
+  const onSubmit = (data: SignInFormData) => {
+    mutation.mutate(data);
+  };
+
+  // Redirect to home if user is logged in
+  if (isAuthenticated) {
+    navigate("/");
+  }
+
   return (
     <>
       <Container size={420} my={40}>
@@ -33,26 +73,36 @@ export function SignIn() {
         </Text>
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput label="Email" placeholder="you@mantine.dev" required />
-          <PasswordInput
-            label="Password"
-            placeholder="Your password"
-            required
-            mt="md"
-          />
-          <Group position="apart" mt="lg">
-            <Checkbox label="Remember me" sx={{ lineHeight: 1 }} />
-            <Anchor
-              component={Link}
-              to="/forgot-password"
-              size="sm"
-            >
-              Forgot password?
-            </Anchor>
-          </Group>
-          <Button fullWidth mt="xl">
-            Sign in
-          </Button>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <TextInput
+              {...register("email")}
+              label="Email"
+              error={errors.email?.message}
+              placeholder="you@mantine.dev"
+              required
+            />
+            <PasswordInput
+              {...register("password")}
+              label="Password"
+              error={errors.password?.message}
+              placeholder="Your password"
+              required
+              mt="md"
+            />
+            <Group position="apart" mt="lg">
+              <Checkbox
+                {...register("rememberMe")}
+                label="Remember me"
+                sx={{ lineHeight: 1 }}
+              />
+              <Anchor component={Link} to="/forgot-password" size="sm">
+                Forgot password?
+              </Anchor>
+            </Group>
+            <Button type="submit" fullWidth mt="xl">
+              Sign In
+            </Button>
+          </form>
         </Paper>
       </Container>
     </>
