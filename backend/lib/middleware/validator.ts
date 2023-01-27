@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { z, ZodSchema } from "zod";
+import {  ZodSchema } from "zod";
 
 function validator(
   schema: ZodSchema,
@@ -7,6 +7,7 @@ function validator(
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
     const zodResult = schema.safeParse(req[checkIn]);
+    console.log("🚀 ~ file: validator.ts:10 ~ return ~ req[checkIn]", req[checkIn])
     if (!zodResult.success) {
       next(zodResult.error);
     }

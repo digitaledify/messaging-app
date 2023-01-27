@@ -1,14 +1,14 @@
 import { z } from "zod";
+import * as dotenv from "dotenv";
+import { NumberStringSchema } from "../lib/zod-schemas";
+
+// Load env variables
+dotenv.config();
 
 const configSchema = z.object({
-  port: z.number().default(8080),
-  db: z.object({
-    host: z.string().default("localhost"),
-    port: z.number().default(5432),
-    user: z.string().default("postgres"),
-    password: z.string().default("postgres"),
-    database: z.string().default("postgres"),
-  }),
+  PORT: NumberStringSchema.default(7000),
+  DATABASE_URL: z.string(),
+  JWT_SECRET: z.string(),
 });
 
 export type Config = z.infer<typeof configSchema>;

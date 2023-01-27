@@ -28,7 +28,7 @@ export function SignUp() {
   const mutation = useMutation({
     mutationKey: [QueryKeys.auth.sign_in],
     mutationFn: async (data: SignUpFormData) => {
-      const res = await http.post("/sign-up", data);
+      const res = await http.post("/users/sign-up", data);
       return res.data;
     },
     onSuccess(data, variables) {

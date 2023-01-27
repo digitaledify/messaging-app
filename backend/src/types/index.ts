@@ -1,9 +1,9 @@
 export interface AuthState {
-  user?: User;
-  token?: string;
+  user: SafeUser;
+  token: string;
 }
 
-export interface User {
+export interface SafeUser {
   name: string;
   email: string;
 }

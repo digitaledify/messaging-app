@@ -28,11 +28,10 @@ export function SignIn() {
   const mutation = useMutation({
     mutationKey: [QueryKeys.auth.sign_in],
     mutationFn: async (data: SignInFormData) => {
-      const res = await http.post("/sign-in", data);
-      return res.data;
+      return http.post("/users/sign-in", data);
     },
     onSuccess(data, variables) {
-      signIn(data, variables.rememberMe);
+      signIn(data.data, variables.rememberMe);
     },
   });
 
