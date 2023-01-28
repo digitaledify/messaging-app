@@ -5,7 +5,7 @@ import { IconCheck } from "@tabler/icons";
 import AuthContext from "./AuthContext";
 import { useEffect, useState } from "react";
 import StorageKeys from "../../lib/storage-keys";
-import { token } from "../../lib/http";
+import { persistAuthState, retriveAuthState } from "../../lib/auth-utils";
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -15,15 +15,9 @@ function AuthProvider(props: AuthProviderProps) {
   const navigate = useNavigate();
   const [authState, setAuthState] = useState<AuthState>({});
 
-  const signIn = async (
-    authState: Required<AuthState>,
-    rememberMe: boolean
-  ) => {
+  const signIn = async (authState: Required<AuthState>) => {
     setAuthState(authState);
-    if (rememberMe) {
-      localStorage.setItem(StorageKeys.AUTH_STATE, JSON.stringify(authState));
-    }
-    token.value = authState.token;
+    persistAuthState(authState);
     navigate("/");
     showNotification({
       title: "Welcome back!",
@@ -35,8 +29,7 @@ function AuthProvider(props: AuthProviderProps) {
 
   const signUp = async (authState: Required<AuthState>) => {
     setAuthState(authState);
-    localStorage.setItem(StorageKeys.AUTH_STATE, JSON.stringify(authState));
-    token.value = authState.token;
+    persistAuthState(authState);
     navigate("/");
     showNotification({
       title: "Welcome!",
@@ -59,14 +52,9 @@ function AuthProvider(props: AuthProviderProps) {
   };
 
   useEffect(() => {
-    try {
-      const authState = JSON.parse(
-        localStorage.getItem(StorageKeys.AUTH_STATE) as string
-      );
+    const authState = retriveAuthState();
+    if (authState) {
       setAuthState(authState);
-      token.value = authState.token;
-    } catch (error) {
-      console.error(error);
     }
   }, []);
 
@@ -76,7 +64,7 @@ function AuthProvider(props: AuthProviderProps) {
         signIn,
         signUp,
         signOut,
-        isAuthenticated: !!authState,
+        isAuthenticated: !!authState.token,
         ...authState,
       }}
     >

@@ -1,9 +1,5 @@
 import axios from "axios";
-import StorageKeys from "./storage-keys";
-
-export const token = {
-  value: "",
-};
+import { retriveAuthState } from "./auth-utils";
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -11,12 +7,11 @@ const http = axios.create({
 });
 
 http.interceptors.request.use((request) => {
-  if (request.headers) {
-    const token = localStorage.getItem(StorageKeys.AUTH_STATE);
-    request.headers["Authorization"] = `Bearer ${token}`;
+  const authState = retriveAuthState();
+  if (request.headers && authState) {
+    request.headers["Authorization"] = `Bearer ${authState.token}`;
   }
   return request;
 });
-
 
 export default http;

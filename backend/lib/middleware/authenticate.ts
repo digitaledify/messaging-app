@@ -5,6 +5,7 @@ import { config } from "../../src/config";
   return expressjwt({
     secret: config.JWT_SECRET,
     algorithms: ["HS256"],
+    requestProperty: 'user'
   }).unless({
     path: ["/api/v1/users/sign-in", "/api/v1/users/sign-up"], // Skip auth check for sign in and sign up
   });

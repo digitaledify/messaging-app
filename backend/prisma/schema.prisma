@@ -11,7 +11,9 @@ datasource db {
 }
 
 model User {
-  email        String    @id @unique @db.VarChar(100)
+  username     String    @id @db.VarChar(100)
+  email        String    @unique
+  avatar       String?
   name         String
   passwordHash String
   channels     Channel[]
@@ -20,16 +22,16 @@ model User {
 }
 
 model Channel {
-  name  String @id @unique
+  name  String @id
   users User[]
 }
 
 model Message {
-  id            String   @id @unique @default(uuid())
-  text          String
-  to            User     @relation("to", fields: [toUserEmail], references: [email])
-  from          User     @relation("from", fields: [fromUserEmail], references: [email])
-  toUserEmail   String   @db.VarChar(100)
-  fromUserEmail String   @db.VarChar(100)
-  time          DateTime @default(now())
+  id           String   @id @default(uuid())
+  text         String
+  to           User     @relation("to", fields: [toUsername], references: [username])
+  from         User     @relation("from", fields: [fromUsername], references: [username])
+  toUsername   String   @db.VarChar(100)
+  fromUsername String   @db.VarChar(100)
+  time         DateTime @default(now())
 }

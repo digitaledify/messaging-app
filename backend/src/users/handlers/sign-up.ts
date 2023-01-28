@@ -9,7 +9,7 @@ import db from "../../../lib/db";
 import { SignUpDataSchema } from "../zod-schemas";
 
 const signUpHandler: RequestHandler = async (req, res, next) => {
-  const { name, email, password } = SignUpDataSchema.parse(req.body);
+  const { name, email, password, username } = SignUpDataSchema.parse(req.body);
 
   // Create user
   let user: User;
@@ -18,6 +18,7 @@ const signUpHandler: RequestHandler = async (req, res, next) => {
       data: {
         name,
         email,
+        username,
         passwordHash: await generatePasswordHash(password),
       },
     });

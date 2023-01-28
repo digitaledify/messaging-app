@@ -9,6 +9,7 @@ export function generateToken(user: SafeUser): string {
     {
       name: user.name,
       email: user.email,
+      username: user.username,
     },
     config.JWT_SECRET,
     {
@@ -22,7 +23,7 @@ export function comparePasswords(password: string, hash: string) {
 }
 
 export function getSafeUserData<T extends SafeUser>(unSafeUser: T) {
-  return pick(unSafeUser, ["email", "name"]);
+  return pick(unSafeUser, ["email", "name", "username", "avatar"]);
 }
 
 export function generatePasswordHash(password: string) {

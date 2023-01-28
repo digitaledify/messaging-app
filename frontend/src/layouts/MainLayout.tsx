@@ -7,8 +7,9 @@ import {
 } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { ModalsProvider } from '@mantine/modals';
-import { Outlet } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import AuthProvider from "../contexts/authentication/AuthProvider";
+import { useQuery } from "@tanstack/react-query";
 
 function MainLayout() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({

@@ -6,6 +6,8 @@ export interface AuthState {
 export interface User {
   name: string;
   email: string;
+  username: string;
+  avatar: string | null;
 }
 
 export interface APIError {

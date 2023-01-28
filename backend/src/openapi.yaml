@@ -15,6 +15,7 @@ security:
 tags:
   - name: Authentication
     description: Authentication endpoints.
+  - name: Channel
 
 paths:
   /users/sign-in:
@@ -48,6 +49,19 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SignUpData"
+      responses:
+        default:
+          description: Response
+          content:
+            schema:
+              type: object
+
+  /channels:
+    description: Get channels list
+    get:
+      deprecated: false
+      tags:
+        - Channel
       responses:
         default:
           description: Response

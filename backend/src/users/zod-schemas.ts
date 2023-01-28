@@ -1,12 +1,17 @@
 import { z } from "zod";
 
 export const SignInDataSchema = z.object({
-  email: z.string().email(),
+  username: z.string().trim(),
   password: z.string().min(6),
 });
 
 export const SignUpDataSchema = SignInDataSchema.merge(
   z.object({
-    name: z.string(),
+    name: z.string().trim(),
+    email: z
+      .string()
+      .email()
+      .trim()
+      .transform((v) => v.toLocaleLowerCase()),
   })
 );

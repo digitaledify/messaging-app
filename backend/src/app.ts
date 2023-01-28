@@ -6,6 +6,7 @@ import authenticate from "../lib/middleware/authenticate";
 import errorHandler from "../lib/middleware/errorHandler";
 import swaggerDocument from "../lib/swaggerDocument";
 import { httpLogger } from "../lib/logger";
+import channelsRouter from "./channels/router";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use(authenticate());
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/channels", channelsRouter);
 
 app.use(errorHandler);
 

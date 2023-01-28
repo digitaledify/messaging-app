@@ -19,6 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import QueryKeys from "../lib/query-keys";
 import http from "../lib/http";
 import { SignInDataSchema } from "../lib/zod-schemas";
+import StorageKeys from "../lib/storage-keys";
 
 type SignInFormData = z.infer<typeof SignInDataSchema>;
 
@@ -30,8 +31,8 @@ export function SignIn() {
     mutationFn: async (data: SignInFormData) => {
       return http.post("/users/sign-in", data);
     },
-    onSuccess(data, variables) {
-      signIn(data.data, variables.rememberMe);
+    onSuccess(data) {
+      signIn(data.data);
     },
   });
 
@@ -44,6 +45,10 @@ export function SignIn() {
   });
 
   const onSubmit = (data: SignInFormData) => {
+    localStorage.setItem(
+      StorageKeys.REMEMBER_ME,
+      JSON.stringify(data.rememberMe)
+    );
     mutation.mutate(data);
   };
 
@@ -74,10 +79,10 @@ export function SignIn() {
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <TextInput
-              {...register("email")}
-              label="Email"
-              error={errors.email?.message}
-              placeholder="you@mantine.dev"
+              {...register("username")}
+              label="Username"
+              error={errors.username?.message}
+              placeholder="mantine"
               required
             />
             <PasswordInput

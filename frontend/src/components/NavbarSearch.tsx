@@ -11,6 +11,8 @@ import {
   Tooltip,
   ScrollArea,
   Title,
+  NavLink,
+  Anchor,
 } from "@mantine/core";
 import {
   IconBulb,
@@ -18,12 +20,13 @@ import {
   IconCheckbox,
   IconSearch,
   IconPlus,
-  IconSelector,
-  IconMessageCircle2,
   IconMessageCircle,
 } from "@tabler/icons";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { getUsersList } from "../lib/api/users";
+import QueryKeys from "../lib/query-keys";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
-import { UserButton } from "./UserButton";
 
 const useStyles = createStyles((theme) => ({
   navbar: {
@@ -118,11 +121,13 @@ const useStyles = createStyles((theme) => ({
   },
 
   collectionLink: {
-    display: "block",
+    display: "flex",
+    flexDirection: "column",
+    gap: theme.spacing.xs,
     padding: `8px ${theme.spacing.xs}px`,
     textDecoration: "none",
     borderRadius: theme.radius.sm,
-    fontSize: theme.fontSizes.xs,
+    fontSize: theme.fontSizes.md,
     color:
       theme.colorScheme === "dark"
         ? theme.colors.dark[0]
@@ -141,31 +146,31 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const links = [
-  { icon: IconBulb, label: "Bot", notifications: 3 },
-  { icon: IconCheckbox, label: "Notifications", notifications: 4 },
-  { icon: IconUser, label: "You" },
-];
-
-const collections = [
-  { emoji: "👍", label: "Sales" },
-  { emoji: "🚚", label: "Deliveries" },
-  { emoji: "💸", label: "Discounts" },
-  { emoji: "💰", label: "Profits" },
-  { emoji: "✨", label: "Reports" },
-  { emoji: "🛒", label: "Orders" },
-  { emoji: "📅", label: "Events" },
-  { emoji: "🙈", label: "Debts" },
-  { emoji: "💁‍♀️", label: "Customers" },
-  { emoji: "🚚", label: "Deliveries" },
-  { emoji: "💸", label: "Discounts" },
-  { emoji: "💰", label: "Profits" },
+  { icon: IconBulb, label: "Bot", notifications: 3, to: "/bot" },
+  {
+    icon: IconCheckbox,
+    label: "Notifications",
+    notifications: 4,
+    to: "/notifications",
+  },
+  { icon: IconUser, label: "You", to: "/me" },
 ];
 
 export function NavbarSearch() {
   const { classes } = useStyles();
+  const usersQuery = useQuery({
+    queryKey: [QueryKeys.users.users_list],
+    queryFn: getUsersList,
+    suspense: true,
+  });
 
   const mainLinks = links.map((link) => (
-    <UnstyledButton key={link.label} className={classes.mainLink}>
+    <UnstyledButton
+      component={Link}
+      to={link.to}
+      key={link.label}
+      className={classes.mainLink}
+    >
       <div className={classes.mainLinkInner}>
         <link.icon size={20} className={classes.mainLinkIcon} stroke={1.5} />
         <span>{link.label}</span>
@@ -178,17 +183,38 @@ export function NavbarSearch() {
     </UnstyledButton>
   ));
 
-  const collectionLinks = collections.map((collection) => (
-    <a
-      href="/"
-      onClick={(event) => event.preventDefault()}
-      key={collection.label}
-      className={classes.collectionLink}
-    >
-      <span style={{ marginRight: 9, fontSize: 16 }}>{collection.emoji}</span>{" "}
-      {collection.label}
-    </a>
-  ));
+  const collectionLinks = usersQuery.isSuccess
+    ? usersQuery.data.map((user) => (
+        <Text
+          component={Link}
+          to={`/chat/${user.username}`}
+          // onClick={(event) => event.preventDefault()}
+          key={user.email}
+          className={classes.collectionLink}
+        >
+          <span>{user.name}</span>
+          <Text size={"xs"} color="dimmed">
+            {user.email}
+          </Text>
+        </Text>
+      ))
+    : [];
+
+  const userLinks = usersQuery.isSuccess
+    ? usersQuery.data.map((user) => (
+        <a
+          href="/"
+          onClick={(event) => event.preventDefault()}
+          key={user.email}
+          className={classes.collectionLink}
+        >
+          <span>{user.name}</span>
+          <Text size={"xs"} color="dimmed">
+            {user.email}
+          </Text>
+        </a>
+      ))
+    : [];
 
   return (
     <Navbar width={{ sm: 300 }} className={classes.navbar}>
@@ -245,7 +271,7 @@ export function NavbarSearch() {
               </ActionIcon>
             </Tooltip>
           </Group>
-          <div className={classes.collections}>{collectionLinks}</div>
+          <div className={classes.collections}>{userLinks}</div>
         </Navbar.Section>
       </ScrollArea>
     </Navbar>

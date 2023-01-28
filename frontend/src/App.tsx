@@ -4,7 +4,7 @@ import { NavbarSearch } from "./components/NavbarSearch";
 import { IconSelector } from "@tabler/icons";
 import { UserButton } from "./components/UserButton";
 import Comments from "./components/Comments";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import useAuth from "./hooks/useAuth";
 
 function App() {
@@ -27,30 +27,7 @@ function App() {
         },
       }}
     >
-      <Stack
-        align={"stretch"}
-        sx={{ height: "100vh" }}
-        pb="md"
-        px={"md"}
-        spacing={"md"}
-        justify={"space-between"}
-      >
-        <Box>
-          <UserButton
-            image="https://i.imgur.com/fGxgcDF.png"
-            name="Bob Rulebreaker"
-            email="Product owner"
-            icon={<IconSelector size={14} stroke={1.5} />}
-          />
-          <Divider mx={"-md"} />
-        </Box>
-
-        <Comments />
-        <Box>
-          <Textarea />
-          <Space h={10} />
-        </Box>
-      </Stack>
+      <Outlet />
     </AppShell>
   );
 }

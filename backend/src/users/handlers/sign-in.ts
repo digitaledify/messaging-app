@@ -9,11 +9,11 @@ import { SignInDataSchema } from "../zod-schemas";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const signInHandler: RequestHandler = async (req, res, next) => {
-  const { email, password } = SignInDataSchema.parse(req.body);
+  const { username, password } = SignInDataSchema.parse(req.body);
 
   const user = await db.user.findUnique({
     where: {
-      email,
+      email: username,
     },
   });
 

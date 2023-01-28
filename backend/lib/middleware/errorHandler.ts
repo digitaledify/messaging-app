@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { ErrorRequestHandler } from "express";
 import { UnauthorizedError } from "express-jwt";
 import { ZodError } from "zod";
@@ -18,6 +19,14 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
       error: "Unauthorized, please sign in!",
     });
     return;
+  }
+
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2025") {
+      res.status(404).json({
+        error: error.message,
+      });
+    }
   }
 
   logger.warn(error);

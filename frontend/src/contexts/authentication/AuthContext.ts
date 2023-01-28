@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { AuthState } from "../../types";
 
 interface IAuthContext extends AuthState {
-  signIn: (authState: Required<AuthState>, rememberMe: boolean) => Promise<void>;
+  signIn: (authState: Required<AuthState>) => Promise<void>;
   signUp: (authState: Required<AuthState>) => Promise<void>;
   signOut: () => Promise<void>;
   isAuthenticated: boolean;

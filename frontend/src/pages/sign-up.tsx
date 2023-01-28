@@ -18,6 +18,7 @@ import { z } from "zod";
 import useAuth from "../hooks/useAuth";
 import http from "../lib/http";
 import QueryKeys from "../lib/query-keys";
+import StorageKeys from "../lib/storage-keys";
 import { SignUpDataSchema } from "../lib/zod-schemas";
 
 type SignUpFormData = z.infer<typeof SignUpDataSchema>;
@@ -31,8 +32,8 @@ export function SignUp() {
       const res = await http.post("/users/sign-up", data);
       return res.data;
     },
-    onSuccess(data, variables) {
-      signIn(data, variables.rememberMe);
+    onSuccess(data) {
+      signIn(data);
     },
   });
 
@@ -45,6 +46,7 @@ export function SignUp() {
   });
 
   const onSubmit = (data: SignUpFormData) => {
+    localStorage.setItem(StorageKeys.REMEMBER_ME, JSON.stringify(data.rememberMe));
     mutation.mutate(data);
   };
 
@@ -81,6 +83,13 @@ export function SignUp() {
             required
           />
           <TextInput
+            {...register("username")}
+            error={errors.email?.message}
+            label="Username"
+            placeholder="mantine"
+            required
+          />
+          <TextInput
             {...register("email")}
             error={errors.email?.message}
             label="Email"
@@ -106,7 +115,7 @@ export function SignUp() {
               Forgot password?
             </Anchor>
           </Group>
-          <Button fullWidth mt="xl">
+          <Button type="submit" fullWidth mt="xl">
             Sign Up
           </Button>
         </form>
