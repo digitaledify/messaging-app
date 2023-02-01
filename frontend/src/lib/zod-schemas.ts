@@ -6,14 +6,16 @@ export const SignInDataSchema = z.object({
   rememberMe: z.boolean().default(false),
 });
 
+export const EmailSchema = z
+  .string()
+  .email()
+  .trim()
+  .transform((v) => v.toLocaleLowerCase());
+
 export const SignUpDataSchema = SignInDataSchema.merge(
   z.object({
     name: z.string().trim(),
-    email: z
-      .string()
-      .email()
-      .trim()
-      .transform((v) => v.toLocaleLowerCase()),
+    email: EmailSchema,
   })
 );
 

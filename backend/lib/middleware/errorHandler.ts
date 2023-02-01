@@ -3,6 +3,7 @@ import { ErrorRequestHandler } from "express";
 import { UnauthorizedError } from "express-jwt";
 import { ZodError } from "zod";
 import logger from "../logger";
+import createError from "http-errors";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
@@ -10,6 +11,13 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   if (error instanceof ZodError) {
     res.status(400).json({
       error,
+    });
+    return;
+  }
+
+  if (createError.isHttpError(error) && error.expose) {
+    res.status(error.status).json({
+      error: error.message,
     });
     return;
   }

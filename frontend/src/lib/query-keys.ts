@@ -5,7 +5,8 @@ const QueryKeys = {
   },
   users: {
     users_list: "users_list",
-    update_user: 'update_user'
+    update_user: "update_user",
+    forgot_password: 'forgot_password'
   },
 } as const;
 

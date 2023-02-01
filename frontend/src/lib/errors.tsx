@@ -1,8 +1,7 @@
-import { showNotification } from "@mantine/notifications";
-import { IconExclamationCircle } from "@tabler/icons";
 import axios from "axios";
 import { z } from "zod";
 import { APIError } from "../types";
+import { notify } from "./notifications";
 
 export function normalizeAPIError(data: APIError): string {
   const { error } = data;
@@ -36,10 +35,9 @@ export function handleAPIError(error: unknown) {
     title = "Error";
   }
 
-  showNotification({
+  notify({
     message,
     title,
-    icon: <IconExclamationCircle />,
-    color: "red",
+    type: "error",
   });
 }

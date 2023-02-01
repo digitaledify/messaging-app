@@ -6,7 +6,10 @@ import {
   SignUpDataSchema,
   UpdateUserSchema,
 } from "./zod-schemas";
-import { SearchQuerySchema, UsernameParamSchema } from "../../lib/zod-schemas";
+import {
+  EmailQueryParamsSchema,
+  SearchQuerySchema,
+} from "../../lib/zod-schemas";
 
 const userRouter = Router({
   mergeParams: true,
@@ -22,6 +25,12 @@ userRouter.post(
   "/sign-up",
   validator(SignUpDataSchema),
   userHandlers.signUpHandler
+);
+
+userRouter.post(
+  "/forgot-password",
+  validator(EmailQueryParamsSchema, "query"),
+  userHandlers.forgotPasswordHandler
 );
 
 userRouter

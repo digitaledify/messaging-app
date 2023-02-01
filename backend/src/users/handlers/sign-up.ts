@@ -1,5 +1,6 @@
 import { Prisma, User } from "@prisma/client";
 import { RequestHandler } from "express";
+import { z } from "zod";
 import {
   generatePasswordHash,
   generateToken,
@@ -25,8 +26,19 @@ const signUpHandler: RequestHandler = async (req, res, next) => {
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
+        // "meta": {
+        //   "target": [
+        //     "username"
+        //   ]
+        // }
+        const duplicateValues = z
+          .string()
+          .array()
+          .safeParse(error.meta?.target);
         res.status(400).json({
-          error: "An account with same email already exists.",
+          error: `An account with same ${
+            duplicateValues.success ? duplicateValues.data.join(",") : "details"
+          } already exists.`,
         });
       }
     }
