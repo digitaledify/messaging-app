@@ -1,8 +1,12 @@
 import { Router } from "express";
 import { userHandlers } from "./handlers";
 import validator from "../../lib/middleware/validator";
-import { SignInDataSchema, SignUpDataSchema } from "./zod-schemas";
-import { SearchQuerySchema } from "../../lib/zod-schemas";
+import {
+  SignInDataSchema,
+  SignUpDataSchema,
+  UpdateUserSchema,
+} from "./zod-schemas";
+import { SearchQuerySchema, UsernameParamSchema } from "../../lib/zod-schemas";
 
 const userRouter = Router({
   mergeParams: true,
@@ -20,10 +24,9 @@ userRouter.post(
   userHandlers.signUpHandler
 );
 
-userRouter.get(
-  "/",
-  validator(SearchQuerySchema, "query"),
-  userHandlers.getUsersListHandler
-);
+userRouter
+  .route("/")
+  .put(validator(UpdateUserSchema), userHandlers.updateUserHandler)
+  .get(validator(SearchQuerySchema, "query"), userHandlers.getUsersListHandler);
 
 export default userRouter;

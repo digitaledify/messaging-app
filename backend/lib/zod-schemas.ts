@@ -11,3 +11,6 @@ export const SearchQuerySchema = z.object({
     .transform((v) => v?.toLocaleLowerCase()),
 });
 
+export const UsernameParamSchema = z.object({
+  username: z.string().min(6),
+});

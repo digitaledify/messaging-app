@@ -15,3 +15,11 @@ export const SignUpDataSchema = SignInDataSchema.merge(
       .transform((v) => v.toLocaleLowerCase()),
   })
 );
+
+export const UpdateUserSchema = SignUpDataSchema.merge(
+  z.object({
+    avatar: z.string().optional(),
+  })
+);
+
+export type UpdateUserData = z.infer<typeof UpdateUserSchema>;
