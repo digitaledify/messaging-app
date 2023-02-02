@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import { generateToken, getSafeUserData } from "../../../lib/auth-utils";
-import db from "../../../lib/db";
+import { generateToken, getSafeUserData } from "../../../../lib/auth-utils";
+import db from "../../../../lib/db";
 import { UpdateUserData } from "../zod-schemas";
 
 const updateUserHandler: RequestHandler = async (req, res, next) => {

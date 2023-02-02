@@ -5,8 +5,8 @@ import {
   generatePasswordHash,
   generateToken,
   getSafeUserData,
-} from "../../../lib/auth-utils";
-import db from "../../../lib/db";
+} from "../../../../lib/auth-utils";
+import db from "../../../../lib/db";
 import { SignUpDataSchema } from "../zod-schemas";
 
 const signUpHandler: RequestHandler = async (req, res, next) => {

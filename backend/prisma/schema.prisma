@@ -22,8 +22,9 @@ model User {
 }
 
 model Channel {
-  name  String @id
-  users User[]
+  name    String    @id
+  users   User[]
+  Message Message[]
 }
 
 model Message {
@@ -34,4 +35,6 @@ model Message {
   toUsername   String   @db.VarChar(100)
   fromUsername String   @db.VarChar(100)
   time         DateTime @default(now())
+  toChannel    Channel  @relation(fields: [channelName], references: [name])
+  channelName  String
 }

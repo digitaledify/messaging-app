@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import db from "../../../lib/db";
-import { SearchQuerySchema } from "../../../lib/zod-schemas";
+import db from "../../../../lib/db";
+import { SearchQuerySchema } from "../../../../lib/zod-schemas";
 
 const getUsersListHandler: RequestHandler = async (req, res, next) => {
   const { search } = SearchQuerySchema.parse(req.query);

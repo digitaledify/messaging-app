@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { userHandlers } from "./handlers";
-import validator from "../../lib/middleware/validator";
+import validator from "../../../lib/middleware/validator";
 import {
   ResetPasswordSchema,
   SignInDataSchema,
@@ -10,7 +10,7 @@ import {
 import {
   EmailQueryParamsSchema,
   SearchQuerySchema,
-} from "../../lib/zod-schemas";
+} from "../../../lib/zod-schemas";
 
 const userRouter = Router({
   mergeParams: true,

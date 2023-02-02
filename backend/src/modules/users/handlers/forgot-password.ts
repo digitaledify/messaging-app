@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
-import { sendPasswordResetLink } from "../../../lib/auth-utils";
-import db from "../../../lib/db";
-import { EmailQueryParam } from "../../types";
+import { sendPasswordResetLink } from "../../../../lib/auth-utils";
+import db from "../../../../lib/db";
+import { EmailQueryParam } from "../../../types";
 import createError from "http-errors";
-import logger from "../../../lib/logger";
+import logger from "../../../../lib/logger";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const forgotPasswordHandler: RequestHandler = async (req, res, next) => {

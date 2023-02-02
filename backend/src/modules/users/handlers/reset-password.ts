@@ -3,11 +3,11 @@ import {
   generatePasswordHash,
   getPasswordResetTokenPayload,
   sendPasswordResetLink,
-} from "../../../lib/auth-utils";
-import db from "../../../lib/db";
-import { EmailQueryParam } from "../../types";
+} from "../../../../lib/auth-utils";
+import db from "../../../../lib/db";
+import { EmailQueryParam } from "../../../types";
 import createError from "http-errors";
-import logger from "../../../lib/logger";
+import logger from "../../../../lib/logger";
 import { ResetPasswordData } from "../zod-schemas";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

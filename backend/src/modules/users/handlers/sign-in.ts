@@ -3,8 +3,8 @@ import {
   comparePasswords,
   generateToken,
   getSafeUserData,
-} from "../../../lib/auth-utils";
-import db from "../../../lib/db";
+} from "../../../../lib/auth-utils";
+import db from "../../../../lib/db";
 import { SignInDataSchema } from "../zod-schemas";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
