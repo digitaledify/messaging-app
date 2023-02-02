@@ -1,16 +1,20 @@
 import { Paper, TextInput, Button, Center, Input, Stack } from "@mantine/core";
 import UploadAvatar from "../components/UploadAvatar";
-import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UpdateUserData, UpdateUserSchema } from "../lib/zod-schemas";
+import { UpdateUserSchema } from "../lib/zod-schemas";
 import { useMutation } from "@tanstack/react-query";
 import QueryKeys from "../lib/query-keys";
 import useAuth from "../hooks/useAuth";
 import http from "../lib/http";
-import { AuthState } from "../types";
+import { AuthState, UpdateUserData } from "../types";
 import { AxiosResponse } from "axios";
+import { IconLogout } from "@tabler/icons";
+import { useForm } from "react-hook-form";
+import avatarSampleSrc from "../assets/avatar-sample.png";
+import { notify } from "../lib/notifications";
 
 function Me() {
+  const auth = useAuth();
   const {
     register,
     control,
@@ -18,13 +22,17 @@ function Me() {
     handleSubmit,
   } = useForm<UpdateUserData>({
     resolver: zodResolver(UpdateUserSchema),
+    defaultValues: {
+      ...auth.user,
+      avatar: auth.user?.avatar || avatarSampleSrc,
+    },
   });
-  const auth = useAuth();
+  console.log("🚀 ~ file: me.tsx:21 ~ Me ~ errors", errors);
 
   const mutation = useMutation({
     mutationKey: [QueryKeys.users.update_user, auth.user?.username],
     mutationFn: async (data: UpdateUserData) => {
-      const res = await http.post<
+      const res = await http.put<
         UpdateUserData,
         AxiosResponse<Required<AuthState>>
       >("/users", data);
@@ -32,15 +40,21 @@ function Me() {
     },
     onSuccess: (data) => {
       auth.signIn(data);
+      notify({
+        type: "success",
+        message: "Profile updated successfully",
+      });
     },
   });
 
   const onSubmit = (data: UpdateUserData) => {
+    console.log("🚀 ~ file: me.tsx:46 ~ onSubmit ~ data", data);
     mutation.mutate(data);
   };
+
   return (
     <Center h={"100%"}>
-      <form>
+      <Stack>
         <Paper miw={500} withBorder shadow="md" p={30} radius="md">
           <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <Stack dir="vertical" spacing={"xs"}>
@@ -65,8 +79,11 @@ function Me() {
                 placeholder="you@mantine.dev"
                 required
               />
-              <Input.Wrapper label="Avatar image">
-                <UploadAvatar control={control} name='avatar' />
+              <Input.Wrapper
+                description="Allowed file size: max: 10kb"
+                label="Avatar image"
+              >
+                <UploadAvatar control={control} />
               </Input.Wrapper>
             </Stack>
             <Button type="submit" fullWidth mt="xl">
@@ -74,7 +91,18 @@ function Me() {
             </Button>
           </form>
         </Paper>
-      </form>
+        <Paper miw={500} withBorder shadow="md" p={30} radius="md">
+          <Button
+            leftIcon={<IconLogout />}
+            variant="light"
+            color={"orange"}
+            onClick={auth.signOut}
+            fullWidth
+          >
+            Logout
+          </Button>
+        </Paper>
+      </Stack>
     </Center>
   );
 }

@@ -68,7 +68,7 @@ export function ForgotPassword() {
     },
   });
 
-  const handlePasswordReset = () => {
+  const handleForgotPassword = () => {
     try {
       const email = EmailSchema.parse(emailInputRef.current?.value);
       mutation.mutate(email);
@@ -108,7 +108,7 @@ export function ForgotPassword() {
           </Anchor>
           <Button
             loading={mutation.isLoading}
-            onClick={handlePasswordReset}
+            onClick={handleForgotPassword}
             className={classes.control}
           >
             Reset password

@@ -3,7 +3,7 @@ import { retriveAuthState } from "./auth-utils";
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 5000,
+  timeout: 5 * 60 * 1000, // 5m
 });
 
 http.interceptors.request.use((request) => {

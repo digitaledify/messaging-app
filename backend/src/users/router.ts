@@ -2,6 +2,7 @@ import { Router } from "express";
 import { userHandlers } from "./handlers";
 import validator from "../../lib/middleware/validator";
 import {
+  ResetPasswordSchema,
   SignInDataSchema,
   SignUpDataSchema,
   UpdateUserSchema,
@@ -31,6 +32,18 @@ userRouter.post(
   "/forgot-password",
   validator(EmailQueryParamsSchema, "query"),
   userHandlers.forgotPasswordHandler
+);
+
+userRouter.post(
+  "/reset-password",
+  validator(ResetPasswordSchema),
+  userHandlers.resetPasswordHandler
+);
+
+userRouter.put(
+  "/",
+  validator(UpdateUserSchema),
+  userHandlers.updateUserHandler
 );
 
 userRouter

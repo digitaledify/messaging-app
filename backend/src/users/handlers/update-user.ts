@@ -6,8 +6,6 @@ import { UpdateUserData } from "../zod-schemas";
 const updateUserHandler: RequestHandler = async (req, res, next) => {
   const updateData = req.body as UpdateUserData;
 
-  
-
   let user;
   try {
     user = await db.user.update({

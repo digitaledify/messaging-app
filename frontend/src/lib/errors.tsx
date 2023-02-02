@@ -5,7 +5,7 @@ import { notify } from "./notifications";
 
 export function normalizeAPIError(data: APIError): string {
   const { error } = data;
-  console.log("🚀 ~ file: errors.tsx:9 ~ normalizeAPIError ~ error", error);
+  console.error(error);
 
   if (Array.isArray(error)) {
     if (z.string().array().min(1).safeParse(error).success) {

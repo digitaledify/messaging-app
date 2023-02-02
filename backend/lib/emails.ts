@@ -9,10 +9,11 @@ sgMail.setApiKey(config.SENDGRID_API_KEY);
 
 export async function sendEmail(message: SendEmailOptions) {
   try {
-    await sgMail.send({
+    const res = await sgMail.send({
       ...message,
       from: message.from || config.SENDGRID_FROM_EMAIL,
     });
+    logger.info(res);
   } catch (error) {
     logger.fatal(error);
     throw new Error("Failed to send email");

@@ -1,8 +1,10 @@
 import { z } from "zod";
 
+const PasswordSchema = z.string().min(6);
+
 export const SignInDataSchema = z.object({
   username: z.string().trim(),
-  password: z.string().min(6),
+  password: PasswordSchema,
   rememberMe: z.boolean().default(false),
 });
 
@@ -19,10 +21,17 @@ export const SignUpDataSchema = SignInDataSchema.merge(
   })
 );
 
-export const UpdateUserSchema = SignUpDataSchema.merge(
+export const UpdateUserSchema = SignUpDataSchema.pick({
+  email: true,
+  name: true,
+  username: true,
+}).merge(
   z.object({
     avatar: z.string().optional(),
   })
 );
 
-export type UpdateUserData = z.infer<typeof UpdateUserSchema>;
+export const ResetPasswordSchema = z.object({
+  password: PasswordSchema,
+  confirmPassword: PasswordSchema,
+});

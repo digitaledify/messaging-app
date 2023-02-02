@@ -1,61 +1,55 @@
-import { useEffect, useState } from "react";
-import { Text, Image, Box } from "@mantine/core";
+import { Text, Image, Space } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from "@mantine/dropzone";
-import { Control, useController } from "react-hook-form";
-import { UpdateUserData } from "../lib/zod-schemas";
-import { encodeImageFileAsURL } from "../lib/files";
-
+import React, { forwardRef } from "react";
+import { Control, Ref, useController } from "react-hook-form";
+import { convertImageToDataUrl } from "../lib/files";
+import { notify } from "../lib/notifications";
+import { UpdateUserData } from "../types";
 type UploadAvatarProps = {
   control: Control<UpdateUserData>;
-  name: keyof UpdateUserData;
 };
 
 function UploadAvatar(props: UploadAvatarProps) {
-  const { field } = useController({
-    name: props.name,
+  const { field } = useController<UpdateUserData>({
+    name: "avatar",
     control: props.control,
   });
 
-  const [files, setFiles] = useState<FileWithPath[]>([]);
-
-  useEffect(() => {
-    if (files.length === 0) {
+  const handleFilesDrop = async (files: FileWithPath[]) => {
+    if (files.length < 1) {
       return;
     }
-    
-    const updateImageValue = async () => {
-      const file = files[0];
-      field.onChange(await encodeImageFileAsURL(file));
-    };
-
-    updateImageValue();
-  }, [files]);
-
-  const previews = files.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file);
-    return (
-      <Image
-        key={index}
-        src={imageUrl}
-        width={200}
-        height={200}
-        imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
-      />
-    );
-  });
+    const file = files[0];
+    field.onChange(await convertImageToDataUrl(file));
+  };
 
   return (
     <div>
+      <Space h="md" />
       <Dropzone
         maxFiles={1}
+        maxSize={10 * 1000} // 10kb max
         ref={field.ref}
         accept={IMAGE_MIME_TYPE}
-        onDrop={setFiles}
+        onReject={(files) => {
+          if (files.length < 1) {
+            return;
+          }
+          notify({
+            message: files[0].errors.map((error) => error.message).join(),
+            type: "warning",
+          });
+        }}
+        onDrop={handleFilesDrop}
       >
         <Text align="center">Drop images here</Text>
+        {/* TODO: Fix field.value type coming as string | boolean */}
+        <Image
+          width={100}
+          src={String(field.value)}
+          alt="User profile avatar"
+        />
       </Dropzone>
-
-      <Box mt={"md"}>{previews}</Box>
     </div>
   );
 }

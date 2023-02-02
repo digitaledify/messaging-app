@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
-import MainLayout from "./layouts/MainLayout";
+import App from "./layouts/MainLayout";
+import MainLayout from "./layouts/App";
 import Bot from "./pages/bot";
 import Chat from "./pages/chat";
 import { ErrorPage } from "./pages/error-page";
@@ -8,6 +8,7 @@ import { ForgotPassword } from "./pages/forgot-password";
 import Me from "./pages/me";
 import Messages from "./pages/messages";
 import Notifications from "./pages/notifications";
+import { ResetPassword } from "./pages/reset-password";
 import { SignIn } from "./pages/sign-in";
 import { SignUp } from "./pages/sign-up";
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/forgot-password",
         element: <ForgotPassword />,
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
       },
       {
         path: "/",

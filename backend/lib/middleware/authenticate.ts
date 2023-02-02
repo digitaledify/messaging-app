@@ -11,6 +11,7 @@ function authenticate() {
       "/api/v1/users/sign-in",
       "/api/v1/users/sign-up",
       "/api/v1/users/forgot-password",
+      "/api/v1/users/reset-password",
     ], // Skip auth check for sign in and sign up
   });
 }

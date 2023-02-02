@@ -9,3 +9,8 @@ export function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
 
   return result;
 }
+
+export function toBase64(data: string) {
+  const buffer = Buffer.from(data);
+  return buffer.toString("base64");
+}

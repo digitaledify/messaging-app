@@ -15,10 +15,12 @@ export const UsernameParamsSchema = z.object({
   username: z.string().min(6),
 });
 
+export const EmailSchema = z
+.string()
+.trim()
+.email()
+.transform((v) => v.toLowerCase()),
+
 export const EmailQueryParamsSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .email()
-    .transform((v) => v.toLowerCase()),
+  email: EmailSchema
 });

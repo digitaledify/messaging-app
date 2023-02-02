@@ -1,4 +1,4 @@
-export function encodeImageFileAsURL(file: File): Promise<string> {
+export function convertImageToDataUrl(file: File): Promise<string> {
   const reader = new FileReader();
   return new Promise((resolve, reject) => {
     reader.onloadend = function () {

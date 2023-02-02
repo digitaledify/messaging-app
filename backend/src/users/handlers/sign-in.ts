@@ -13,14 +13,14 @@ const signInHandler: RequestHandler = async (req, res, next) => {
 
   const user = await db.user.findUnique({
     where: {
-      email: username,
+      username,
     },
   });
 
   // Find user
   if (!user) {
     res.status(400).json({
-      error: "Invalid email or password.",
+      error: "Invalid username or password.",
     });
     return;
   }
@@ -28,7 +28,7 @@ const signInHandler: RequestHandler = async (req, res, next) => {
   // Check password
   if (!comparePasswords(password, user.passwordHash)) {
     res.status(400).json({
-      error: "Invalid email or password.",
+      error: "Invalid username or password.",
     });
     return;
   }

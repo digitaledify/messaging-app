@@ -5,6 +5,8 @@ import { compareSync, hash } from "bcryptjs";
 import { pick } from "./util";
 import { sendEmail } from "./emails";
 import logger from "./logger";
+import { z } from "zod";
+import { EmailSchema } from "./zod-schemas";
 
 export function generateToken(user: SafeUser): string {
   return jwt.sign(
@@ -37,7 +39,7 @@ export function generatePasswordResetLink(email: string) {
     expiresIn: "30m",
   });
   const url = new URL("/reset-password", config.FRONTEND_URL);
-  url.searchParams.set("email", jwtSignedUserId);
+  url.searchParams.set("token", jwtSignedUserId);
   return url.toString();
 }
 
@@ -53,4 +55,20 @@ export async function sendPasswordResetLink(email: string) {
     logger.fatal(error);
     throw new Error("Failed to email password reset link");
   }
+}
+
+/**
+ * Payload is user's email.
+ * @param token string
+ * @returns string
+ */
+export function getPasswordResetTokenPayload(token: string) {
+  const payload = jwt.verify(token, config.JWT_SECRET);
+  const zodResult = z
+    .object({
+      email: EmailSchema,
+    })
+    .safeParse(payload);
+
+  return zodResult.success ? zodResult.data.email : null;
 }
