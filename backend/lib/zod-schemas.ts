@@ -16,11 +16,11 @@ export const UsernameParamsSchema = z.object({
 });
 
 export const EmailSchema = z
-.string()
-.trim()
-.email()
-.transform((v) => v.toLowerCase()),
+  .string()
+  .trim()
+  .email()
+  .transform((v) => v.toLowerCase());
 
 export const EmailQueryParamsSchema = z.object({
-  email: EmailSchema
+  email: EmailSchema,
 });

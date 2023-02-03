@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { config } from "../src/config";
 import { SafeUser } from "../src/types";
 import { compareSync, hash } from "bcryptjs";
@@ -71,4 +71,14 @@ export function getPasswordResetTokenPayload(token: string) {
     .safeParse(payload);
 
   return zodResult.success ? zodResult.data.email : null;
+}
+
+export function getAuthTokenPayload(token: string): jwt.JwtPayload | null {
+  try {
+    const payload = jwt.verify(token, config.JWT_SECRET) as JwtPayload;
+    return payload;
+  } catch (error) {
+    logger.info(error)
+    return null;
+  }
 }
