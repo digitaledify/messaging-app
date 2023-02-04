@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { EmailQueryParamsSchema } from "../../lib/zod-schemas";
-import { MessagesPaginationCursorSchema } from "../modules/messaging/zod-schemas";
+import {
+  CreateMessageSchema,
+  MessagesPaginationCursorSchema,
+} from "../modules/messaging/zod-schemas";
 
 export interface AuthState {
   user: SafeUser;
@@ -31,3 +34,5 @@ export interface SendEmailOptions {
 export type MessagesPaginationCursor = z.infer<
   typeof MessagesPaginationCursorSchema
 >;
+
+export type CreateMessageData = z.infer<typeof CreateMessageSchema>;

@@ -11,8 +11,6 @@ import {
   Tooltip,
   ScrollArea,
   Title,
-  NavLink,
-  Anchor,
 } from "@mantine/core";
 import {
   IconBulb,
@@ -23,7 +21,7 @@ import {
   IconMessageCircle,
 } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 import { getUsersList } from "../lib/api/users";
 import QueryKeys from "../lib/query-keys";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
@@ -204,7 +202,12 @@ export function NavbarSearch() {
     ? usersQuery.data.map((user) => (
         <Text
           component={Link}
-          to={`/chat/${user.username}`}
+          to={{
+            pathname: generatePath("/chat/:usernameOrChannelName", {
+              usernameOrChannelName: user.username,
+            }),
+            search: `?chatType=dm`,
+          }}
           // onClick={(event) => event.preventDefault()}
           key={user.email}
           className={classes.collectionLink}

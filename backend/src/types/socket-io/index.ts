@@ -1,7 +1,12 @@
 import { Message } from "@prisma/client";
 import { Socket } from "socket.io";
 import { ExtendedError } from "socket.io/dist/namespace";
-import { MessagesPaginationCursor, SafeUser } from "..";
+import {
+  APIError,
+  CreateMessageData,
+  MessagesPaginationCursor,
+  SafeUser,
+} from "..";
 
 export interface ServerToClientEvents {
   noArg: () => void;
@@ -11,15 +16,17 @@ export interface ServerToClientEvents {
   "users:user_offline": (username: string) => void;
   "users:user_created": (username: string) => void;
   "messages:new_message": (message: Message) => void;
+  app_error: (error: APIError) => void;
 }
 
 export interface ClientToServerEvents {
-  "messages:new_message": (
-    message: Pick<Message, "text" | "toUsername">
-  ) => void;
-  "messages:get_new_messages": (
-    cursor: MessagesPaginationCursor,
-    callback: (page: { data: Message[]; hasMore: boolean }) => void
+  "messages:new_message": (message: CreateMessageData) => void;
+  "messages:get_old_messages": (
+    cursor: MessagesPaginationCursor | null,
+    callback: (page: {
+      data: Message[];
+      nextCursor: MessagesPaginationCursor | null;
+    }) => void
   ) => void;
 }
 
@@ -29,6 +36,7 @@ export interface InterServerEvents {
 
 export interface SocketData {
   user: SafeUser;
+  test: string;
 }
 
 export type AppSocket = Socket<

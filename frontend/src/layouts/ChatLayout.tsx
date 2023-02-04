@@ -1,53 +1,45 @@
 import { useState, useEffect } from "react";
 import { Outlet, useOutletContext } from "react-router-dom";
 import { z } from "zod";
-import socket from "../lib/socket-io";
+import socket from "../lib/socketio";
 import { ChatType, Message, MessagesPaginationCursor } from "../types";
 
 type MessagePages = Record<
   string,
   {
     data: Message[];
-    hasMore: boolean;
+    nextCursor?: string;
   }
 >;
 
 type OutletContext = {
   getMessages: (usernameOrChannelName: string) => {
     data: Message[];
-    hasMore: boolean;
+    nextCursor: MessagesPaginationCursor | null;
   };
   handleNewMessage: (chatType: ChatType, text: string, to: string) => void;
-  handlePagination: (
-    position: {
-      x: number;
-      y: number;
-    },
-    cursor: MessagesPaginationCursor
-  ) => void;
+  handlePagination: (cursor: MessagesPaginationCursor | null) => void;
 };
 
 function ChatLayout() {
   const [messages, setMessages] = useState<MessagePages>({});
 
-  const handlePagination = (
-    position: { x: number; y: number },
-    cursor: MessagesPaginationCursor
-  ) => {
-    if (position.y < 50) {
-      socket.emit("messages:get_new_messages", cursor, (page) => {
-        const to =
-          cursor.chatType === "dm" ? cursor.username : cursor.channelName;
-
-        setMessages({
-          ...messages,
-          [to]: {
-            data: [...page.data, ...messages[to].data],
-            hasMore: page.hasMore,
-          },
-        });
-      });
+  const handlePagination = (cursor: MessagesPaginationCursor | null) => {
+    if (!cursor) {
+      return;
     }
+    socket.emit("messages:get_new_messages", cursor, (page) => {
+      const to =
+        cursor.chatType === "dm" ? cursor.username : cursor.channelName;
+
+      setMessages({
+        ...messages,
+        [to]: {
+          data: [...page.data, ...messages[to].data],
+          nextCursor: page.nextCursor,
+        },
+      });
+    });
   };
 
   const handleNewMessage = (chatType: ChatType, text: string, to: string) => {

@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { retriveAuthState } from "./auth-utils";
-import { ServerToClientEvents, ClientToServerEvents } from "../types/socket-io";
+import { ServerToClientEvents, ClientToServerEvents } from "../types/socketio";
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   import.meta.env.VITE_SOCKET_URL,

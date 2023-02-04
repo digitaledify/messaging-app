@@ -15,11 +15,9 @@ export interface ClientToServerEvents {
     message: Pick<Message, "text" | "toUsername">
   ) => void;
   "messages:get_new_messages": (
-    cursor: MessagesPaginationCursor,
-    callback: (messages: { data: Message[]; hasMore: boolean }) => void
+    cursor: MessagesPaginationCursor | null,
+    callback: (messages: { data: Message[]; nextCursor?: string }) => void
   ) => void;
 }
-
-
 
 export type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents>;

@@ -2,7 +2,7 @@ import { IconActivity, IconCloudDataConnection } from "@tabler/icons";
 import { useEffect, useState } from "react";
 import { notify } from "../../lib/notifications";
 import useAuth from "../useAuth";
-import socket from "../../lib/socket-io";
+import socket from "../../lib/socketio";
 
 function useSocket() {
   const auth = useAuth();
