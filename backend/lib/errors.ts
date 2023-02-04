@@ -3,7 +3,7 @@ import { APIError } from "../src/types";
 import logger from "./logger";
 
 export const sanitizeError = (error: unknown): APIError => {
-  logger.error(error)
+  logger.error(error);
   if (error instanceof ZodError) {
     return { error };
   }

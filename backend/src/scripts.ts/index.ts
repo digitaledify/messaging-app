@@ -5,8 +5,6 @@ async function main() {
   const blob = new Blob(["Hello", buffer, new Blob(["World"])], {
     type: "text/plain",
   });
-
-  
 }
 
 main().catch((error) => {

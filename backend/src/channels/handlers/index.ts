@@ -3,7 +3,7 @@ import getChannelsHandler from "./get-channels";
 
 const channelHandlers = {
   getChannelsHandler,
-  createChannelHandler
+  createChannelHandler,
 };
 
 export default channelHandlers;

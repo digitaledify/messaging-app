@@ -25,7 +25,7 @@ export const authenticateSocket: SocketIOMiddleware = (socket, next) => {
   }
 
   const payload = getAuthTokenPayload(token);
-  
+
   if (!payload) {
     next(new Error("Invalid auth token."));
     return;

@@ -13,5 +13,5 @@ export const userHandlers = {
   updateUserHandler,
   forgotPasswordHandler,
   resetPasswordHandler,
-  getUserHandler
+  getUserHandler,
 };

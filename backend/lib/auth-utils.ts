@@ -78,7 +78,7 @@ export function getAuthTokenPayload(token: string): jwt.JwtPayload | null {
     const payload = jwt.verify(token, config.JWT_SECRET) as JwtPayload;
     return payload;
   } catch (error) {
-    logger.info(error)
+    logger.info(error);
     return null;
   }
 }

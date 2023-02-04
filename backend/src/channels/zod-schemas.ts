@@ -13,4 +13,3 @@ export const CreateChannelDataSchema = z.object({
     .array()
     .min(1),
 });
-

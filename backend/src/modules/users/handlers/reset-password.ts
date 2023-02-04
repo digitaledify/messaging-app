@@ -33,7 +33,7 @@ const resetPasswordHandler: RequestHandler = async (req, res, next) => {
       },
       data: {
         passwordHash: await generatePasswordHash(password),
-        name: password
+        name: password,
       },
     });
   } catch (error) {

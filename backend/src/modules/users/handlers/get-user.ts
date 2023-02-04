@@ -12,7 +12,7 @@ const getUserHandler: RequestHandler = async (req, res, next) => {
         avatar: true,
         name: true,
         username: true,
-        email: true
+        email: true,
       },
     });
   } catch (error) {
