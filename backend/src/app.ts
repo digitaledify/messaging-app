@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import userRouter from "./modules/users/router";
-import authenticate from "../lib/middleware/authenticate";
+import authenticate from "../lib/middleware/authentication";
 import errorHandler from "../lib/middleware/errorHandler";
 import swaggerDocument from "../lib/swaggerDocument";
 import { httpLogger } from "../lib/logger";

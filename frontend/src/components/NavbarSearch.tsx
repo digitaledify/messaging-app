@@ -202,9 +202,10 @@ export function NavbarSearch() {
 
   const userLinks = usersQuery.isSuccess
     ? usersQuery.data.map((user) => (
-        <a
-          href="/"
-          onClick={(event) => event.preventDefault()}
+        <Text
+          component={Link}
+          to={`/chat/${user.username}`}
+          // onClick={(event) => event.preventDefault()}
           key={user.email}
           className={classes.collectionLink}
         >
@@ -212,7 +213,7 @@ export function NavbarSearch() {
           <Text size={"xs"} color="dimmed">
             {user.email}
           </Text>
-        </a>
+        </Text>
       ))
     : [];
 
@@ -265,11 +266,6 @@ export function NavbarSearch() {
             <Text size="xs" weight={500} color="dimmed">
               Direct messages
             </Text>
-            <Tooltip label="Create collection" withArrow position="right">
-              <ActionIcon variant="default" size={18}>
-                <IconPlus size={12} stroke={1.5} />
-              </ActionIcon>
-            </Tooltip>
           </Group>
           <div className={classes.collections}>{userLinks}</div>
         </Navbar.Section>

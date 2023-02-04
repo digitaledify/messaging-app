@@ -26,7 +26,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface UserButtonProps extends UnstyledButtonProps {
-  image: string;
+  image?: string;
   name: string;
   email: string;
   icon?: React.ReactNode;
@@ -47,11 +47,11 @@ export function UserButton({
         <Avatar src={image} radius="xl" />
         <div>
           <Text variant="gradient" size="lg" weight={"bold"}>
-            Live Chat
+            {name}
           </Text>
 
           <Text color="dimmed" size="xs">
-            Stay connected in real time!
+            {email}
           </Text>
         </div>
       </Group>

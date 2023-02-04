@@ -27,14 +27,15 @@ model Channel {
   Message Message[]
 }
 
+// TODO: Add constrain (CHECK ?) to make sure on the columns (channelName/toUsername) is not null.
 model Message {
   id           String   @id @default(uuid())
   text         String
-  to           User     @relation("to", fields: [toUsername], references: [username])
+  to           User?    @relation("to", fields: [toUsername], references: [username])
   from         User     @relation("from", fields: [fromUsername], references: [username])
-  toUsername   String   @db.VarChar(100)
+  toUsername   String?  @db.VarChar(100)
   fromUsername String   @db.VarChar(100)
   time         DateTime @default(now())
-  toChannel    Channel  @relation(fields: [channelName], references: [name])
-  channelName  String
+  toChannel    Channel? @relation(fields: [channelName], references: [name])
+  channelName  String?
 }

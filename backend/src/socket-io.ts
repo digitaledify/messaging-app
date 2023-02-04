@@ -6,7 +6,7 @@ import {
   InterServerEvents,
   SocketData,
 } from "./types/socket-io";
-import { authenticateSocket } from "../lib/middleware/authenticate";
+import { authenticateSocket } from "../lib/middleware/authentication";
 
 const io = new Server<
   ClientToServerEvents,
@@ -21,8 +21,6 @@ const io = new Server<
 
 io.use(authenticateSocket);
 
-io.on("connection", (socket) => {
-  
-});
+io.on("connection", (socket) => {});
 
 export default io;

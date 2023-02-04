@@ -10,11 +10,18 @@ import {
 import {
   EmailQueryParamsSchema,
   SearchQuerySchema,
+  UsernameParamsSchema,
 } from "../../../lib/zod-schemas";
 
 const userRouter = Router({
   mergeParams: true,
 });
+
+userRouter.get(
+  "/:username",
+  validator(UsernameParamsSchema, "params"),
+  userHandlers.getUserHandler
+);
 
 userRouter.post(
   "/sign-in",

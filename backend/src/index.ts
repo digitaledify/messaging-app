@@ -1,7 +1,7 @@
 import logger from "../lib/logger";
 import { config } from "./config";
 import httpServer from "./server";
-
+import "./socket-io"; // Start socket-io server.
 
 async function main() {
   httpServer.listen(config.PORT, () => {

@@ -1,17 +1,20 @@
-import { AppShell, Box, Divider, Space, Stack, Textarea } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { NavbarSearch } from "../components/NavbarSearch";
-import { IconSelector } from "@tabler/icons";
-import { UserButton } from "../components/UserButton";
-import Comments from "../components/Comments";
 import { Outlet, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import useSocket from "../hooks/useSocket";
 
 function MainLayout() {
   // Redirect to signin if not logged in
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+
+  // Establishes socket connection
+  useSocket();
+
+  const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     navigate("/sign-in");
+    return null;
   }
 
   return (

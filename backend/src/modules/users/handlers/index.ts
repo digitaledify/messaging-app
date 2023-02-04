@@ -1,4 +1,5 @@
 import forgotPasswordHandler from "./forgot-password";
+import getUserHandler from "./get-user";
 import getUsersListHandler from "./get-users-list";
 import resetPasswordHandler from "./reset-password";
 import signInHandler from "./sign-in";
@@ -11,5 +12,6 @@ export const userHandlers = {
   getUsersListHandler,
   updateUserHandler,
   forgotPasswordHandler,
-  resetPasswordHandler
+  resetPasswordHandler,
+  getUserHandler
 };
