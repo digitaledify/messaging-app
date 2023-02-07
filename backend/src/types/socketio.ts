@@ -6,7 +6,7 @@ import {
   CreateMessageData,
   MessagesPaginationCursor,
   SafeUser,
-} from "..";
+} from ".";
 
 export interface ServerToClientEvents {
   noArg: () => void;
@@ -22,10 +22,10 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   "messages:new_message": (message: CreateMessageData) => void;
   "messages:get_old_messages": (
-    cursor: MessagesPaginationCursor | null,
+    cursor: MessagesPaginationCursor,
     callback: (page: {
       data: Message[];
-      nextCursor: MessagesPaginationCursor | null;
+      nextCursor: MessagesPaginationCursor;
     }) => void
   ) => void;
 }

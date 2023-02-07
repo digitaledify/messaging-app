@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { sanitizeError } from "../../../../lib/errors";
+import io from "../../../socketio";
 import { SocketEventHandler } from "../../../types/util";
 import createMessage from "../repository/create-message";
 import getOldMessagesAsPage from "../repository/get-old-messages-page";
@@ -23,7 +24,7 @@ export const handleNewMessage: SocketEventHandler<"messages:new_message"> =
       return;
     }
 
-    socket.broadcast.emit("messages:new_message", newMessage);
+    io.emit("messages:new_message", newMessage);
   };
 
 export const handleGetMessages: SocketEventHandler<

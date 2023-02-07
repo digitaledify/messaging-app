@@ -56,6 +56,7 @@ export function ErrorPage() {
   const error = useRouteError();
 
   console.error(error);
+  console.error({error});
 
   if (!isRouteErrorResponse(error) && import.meta.env.MODE === "development") {
     throw new Error("ErrorPage: Invalid error", {

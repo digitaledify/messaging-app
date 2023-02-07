@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
-import { Message, MessagesPaginationCursor } from ".";
+import { APIError, CreateMessageData, Message, MessagesPaginationCursor } from ".";
+
 
 export interface ServerToClientEvents {
   noArg: () => void;
@@ -9,14 +10,17 @@ export interface ServerToClientEvents {
   "users:user_offline": (username: string) => void;
   "users:user_created": (username: string) => void;
   "messages:new_message": (message: Message) => void;
+  app_error: (error: APIError) => void;
 }
+
 export interface ClientToServerEvents {
-  "messages:new_message": (
-    message: Pick<Message, "text" | "toUsername">
-  ) => void;
-  "messages:get_new_messages": (
-    cursor: MessagesPaginationCursor | null,
-    callback: (messages: { data: Message[]; nextCursor?: string }) => void
+  "messages:new_message": (message: CreateMessageData) => void;
+  "messages:get_old_messages": (
+    cursor: MessagesPaginationCursor,
+    callback: (page: {
+      data: Message[];
+      nextCursor: MessagesPaginationCursor;
+    }) => void
   ) => void;
 }
 

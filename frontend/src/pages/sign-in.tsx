@@ -20,6 +20,7 @@ import QueryKeys from "../lib/query-keys";
 import http from "../lib/http";
 import { SignInDataSchema } from "../lib/zod-schemas";
 import StorageKeys from "../lib/storage-keys";
+import { useEffect } from "react";
 
 type SignInFormData = z.infer<typeof SignInDataSchema>;
 
@@ -52,10 +53,12 @@ export function SignIn() {
     mutation.mutate(data);
   };
 
-  // Redirect to home if user is logged in
-  if (isAuthenticated) {
-    navigate("/");
-  }
+  useEffect(() => {
+    // Redirect to home if user is logged in
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <>

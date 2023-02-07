@@ -6,9 +6,10 @@ import {
   Space,
   Stack,
   Text,
-  Textarea,
+  TextInput,
 } from "@mantine/core";
-import { KeyboardEventHandler, useEffect, useState } from "react";
+import { IconSend } from "@tabler/icons";
+import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import useAuth from "../../hooks/useAuth";
@@ -25,17 +26,13 @@ function Messages() {
   const { getMessages, handleNewMessage, handlePagination } = useChatContext();
   const messages = getMessages(usernameOrChannelName);
   const auth = useAuth();
+
   useEffect(() => {
     // Trigger on mount
     if (messages.data.length === 0) {
       handlePagination(null);
     }
   }, [handlePagination, messages.data.length]);
-
-  if (!chatType) {
-    setSearchParams(new URLSearchParams([["chatType", "dm"]]));
-    return null;
-  }
 
   const handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"] =
     (position) => {
@@ -46,13 +43,31 @@ function Messages() {
       handlePagination(messages.nextCursor);
     };
 
-  const handleMessageSubmit: KeyboardEventHandler<HTMLTextAreaElement> = (
-    event
-  ) => {
-    if (event.code === "Enter") {
-      handleNewMessage(chatType, message, usernameOrChannelName);
+  const scrollToBottom = () => {
+    if (viewport.current) {
+      viewport.current.scrollTo({
+        top: viewport.current.scrollHeight * 2,
+        behavior: "smooth",
+      });
     }
   };
+  const handleMessageSubmit: KeyboardEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    if (event.code === "Enter" && chatType) {
+      handleNewMessage(chatType, message, usernameOrChannelName);
+      setMessage("");
+      scrollToBottom();
+    }
+  };
+  const viewport = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!chatType) {
+      setSearchParams(new URLSearchParams([["chatType", "dm"]]));
+    }
+  }, [chatType, setSearchParams]);
+
 
   return (
     <>
@@ -60,11 +75,11 @@ function Messages() {
         sx={{
           height: "100%",
         }}
+        ref={viewport}
         onScrollPositionChange={handleScrollPositionChange}
       >
         <Stack spacing={"xs"}>
           {messages.data.map((message) => {
-            
             if (message.fromUsername === auth.user?.username) {
               return (
                 <Card
@@ -88,8 +103,7 @@ function Messages() {
                       })}
                       size="sm"
                     >
-                      Dolor est nulla culpa eu occaecat amet culpa excepteur
-                      velit
+                      {message.text}
                     </Text>
                     <Text
                       color={"dimmed"}
@@ -99,7 +113,7 @@ function Messages() {
                       size="xs"
                       p={"xs"}
                     >
-                      23:23 Sent
+                      {message.time.toString()}
                     </Text>
                   </Card.Section>
                 </Card>
@@ -129,16 +143,10 @@ function Messages() {
                       })}
                       size="sm"
                     >
-                      Dolor est nulla culpa eu occaecat amet culpa excepteur
-                      velit cupidatat proident ut quis aliqua. Esse ad nostrud
-                      nulla sint occaecat laborum officia. Fugiat velit nulla
-                      velit sit. Do anim proident id reprehenderit occaecat
-                      commodo cillum id adipisicing in culpa amet. Nostrud non
-                      consequat irure exercitation duis magna sint. Tempor esse
-                      pariatur ad aliqua consectetur ullamco et.
+                      {message.text}
                     </Text>
                     <Text color={"dimmed"} size="xs" p={"xs"}>
-                      23:23 Sent
+                      {message.time.toString()}
                     </Text>
                   </Card.Section>
                 </Card>
@@ -148,10 +156,12 @@ function Messages() {
         </Stack>
       </ScrollArea>
       <Box>
-        <Textarea
+        <TextInput
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           onKeyDown={handleMessageSubmit}
+          rightSection={<IconSend />}
+          placeholder="Type here.."
         />
         <Space h={10} />
       </Box>

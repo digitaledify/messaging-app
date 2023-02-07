@@ -3,6 +3,7 @@ import { NavbarSearch } from "../components/NavbarSearch";
 import { Outlet, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useSocket from "../hooks/useSocket";
+import { useEffect } from "react";
 
 function MainLayout() {
   // Redirect to signin if not logged in
@@ -12,10 +13,12 @@ function MainLayout() {
   useSocket();
 
   const { isAuthenticated } = useAuth();
-  if (!isAuthenticated) {
-    navigate("/sign-in");
-    return null;
-  }
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/sign-in");
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <AppShell

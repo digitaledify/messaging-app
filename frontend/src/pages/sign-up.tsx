@@ -12,6 +12,7 @@ import {
   Button,
 } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -46,14 +47,19 @@ export function SignUp() {
   });
 
   const onSubmit = (data: SignUpFormData) => {
-    localStorage.setItem(StorageKeys.REMEMBER_ME, JSON.stringify(data.rememberMe));
+    localStorage.setItem(
+      StorageKeys.REMEMBER_ME,
+      JSON.stringify(data.rememberMe)
+    );
     mutation.mutate(data);
   };
 
-  // Redirect to home if user is logged in
-  if (isAuthenticated) {
-    navigate("/");
-  }
+  useEffect(() => {
+    // Redirect to home if user is logged in
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <Container size={420} my={40}>

@@ -1,17 +1,16 @@
-import React from "react";
 import "../App.css";
 
 import { useLocalStorage, useHotkeys } from "@mantine/hooks";
 import {
   ColorScheme,
   ColorSchemeProvider,
+  Loader,
   MantineProvider,
 } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
-import { ModalsProvider } from "@mantine/modals";
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import AuthProvider from "../contexts/authentication/AuthProvider";
-import { useQuery } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -27,24 +26,26 @@ function App() {
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
   return (
-    <AuthProvider>
-      <ColorSchemeProvider
-        colorScheme={colorScheme}
-        toggleColorScheme={toggleColorScheme}
-      >
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{
-            colorScheme,
-          }}
+    <Suspense fallback={<Loader />}>
+      <AuthProvider>
+        <ColorSchemeProvider
+          colorScheme={colorScheme}
+          toggleColorScheme={toggleColorScheme}
         >
-          <NotificationsProvider position="top-right">
-            <Outlet />
-          </NotificationsProvider>
-        </MantineProvider>
-      </ColorSchemeProvider>
-    </AuthProvider>
+          <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{
+              colorScheme,
+            }}
+          >
+            <NotificationsProvider position="top-right">
+              <Outlet />
+            </NotificationsProvider>
+          </MantineProvider>
+        </ColorSchemeProvider>
+      </AuthProvider>
+    </Suspense>
   );
 }
 

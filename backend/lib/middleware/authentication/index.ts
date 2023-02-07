@@ -1,6 +1,6 @@
 import { expressjwt } from "express-jwt";
 import { config } from "../../../src/config";
-import { SocketIOMiddleware } from "../../../src/types/socket-io";
+import { SocketIOMiddleware } from "../../../src/types/socketio";
 import jwt from "jsonwebtoken";
 import { getAuthTokenPayload } from "../../auth-utils";
 import { pick } from "../../util";

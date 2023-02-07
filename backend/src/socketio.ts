@@ -5,7 +5,7 @@ import {
   ServerToClientEvents,
   InterServerEvents,
   SocketData,
-} from "./types/socket-io";
+} from "./types/socketio";
 import { authenticateSocket } from "../lib/middleware/authentication";
 import {
   handleGetMessages,

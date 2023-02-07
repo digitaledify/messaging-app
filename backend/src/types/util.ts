@@ -1,4 +1,4 @@
-import { AppSocket, ClientToServerEvents } from "./socket-io";
+import { AppSocket, ClientToServerEvents } from "./socketio";
 
 export type SocketEventHandler<T extends keyof ClientToServerEvents> = (
   socket: AppSocket

@@ -8,30 +8,30 @@ type MessagePages = Record<
   string,
   {
     data: Message[];
-    nextCursor?: string;
+    nextCursor: MessagesPaginationCursor | null;
   }
 >;
 
 type OutletContext = {
   getMessages: (usernameOrChannelName: string) => {
     data: Message[];
-    nextCursor: MessagesPaginationCursor | null;
+    nextCursor: MessagesPaginationCursor;
   };
-  handleNewMessage: (chatType: ChatType, text: string, to: string) => void;
-  handlePagination: (cursor: MessagesPaginationCursor | null) => void;
+  handleNewMessage: (
+    chatType: NonNullable<ChatType>,
+    text: string,
+    to: string
+  ) => void;
+  handlePagination: (cursor: MessagesPaginationCursor) => void;
 };
 
 function ChatLayout() {
   const [messages, setMessages] = useState<MessagePages>({});
 
-  const handlePagination = (cursor: MessagesPaginationCursor | null) => {
-    if (!cursor) {
-      return;
-    }
-    socket.emit("messages:get_new_messages", cursor, (page) => {
+  const handlePagination = (cursor: MessagesPaginationCursor) => {
+    socket.emit("messages:get_old_messages", cursor, (page) => {
       const to =
         cursor.chatType === "dm" ? cursor.username : cursor.channelName;
-
       setMessages({
         ...messages,
         [to]: {
@@ -42,11 +42,25 @@ function ChatLayout() {
     });
   };
 
-  const handleNewMessage = (chatType: ChatType, text: string, to: string) => {
-    socket.emit("messages:new_message", {
-      text,
-      toUsername: to, // to channel name?
-    });
+  const handleNewMessage = (
+    chatType: NonNullable<ChatType>,
+    text: string,
+    usernameOrChannelName: string
+  ) => {
+    if (chatType === "channel") {
+      socket.emit("messages:new_message", {
+        text,
+        chatType,
+        channelName: usernameOrChannelName,
+      });
+    } else {
+      // dm case
+      socket.emit("messages:new_message", {
+        text,
+        chatType,
+        username: usernameOrChannelName,
+      });
+    }
   };
 
   useEffect(() => {
@@ -56,7 +70,7 @@ function ChatLayout() {
         ...messages,
         [to]: {
           ...messages[to],
-          data: [...messages[to].data, message],
+          data: [...(messages[to]?.data || []), message],
         },
       });
     });
@@ -67,7 +81,10 @@ function ChatLayout() {
   }, [messages]);
 
   const getMessages = (usernameOrChannelName: string) =>
-    messages[usernameOrChannelName];
+    messages[usernameOrChannelName] || {
+      data: [],
+      nextCursor: null,
+    };
 
   const context: OutletContext = {
     getMessages,
