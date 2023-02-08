@@ -1,10 +1,14 @@
 import { Alert } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons";
 
-function GenericError() {
+type GenericErrorProps = {
+  message?: React.ReactNode;
+};
+
+function GenericError(props: GenericErrorProps) {
   return (
     <Alert icon={<IconAlertTriangle />} color={"red"}>
-      Something went wrong!
+      {props.message || "Something went wrong!"}
     </Alert>
   );
 }

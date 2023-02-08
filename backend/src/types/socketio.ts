@@ -3,6 +3,7 @@ import { Socket } from "socket.io";
 import { ExtendedError } from "socket.io/dist/namespace";
 import {
   APIError,
+  ChatType,
   CreateMessageData,
   MessagesPaginationCursor,
   SafeUser,
@@ -22,11 +23,10 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   "messages:new_message": (message: CreateMessageData) => void;
   "messages:get_old_messages": (
-    cursor: MessagesPaginationCursor,
-    callback: (page: {
-      data: Message[];
-      nextCursor: MessagesPaginationCursor;
-    }) => void
+    cursor: string | null,
+    chatType: ChatType,
+    to: string,
+    callback: (page: { data: Message[]; nextCursor: string | null }) => void
   ) => void;
 }
 

@@ -15,7 +15,9 @@ type AuthProviderProps = {
 
 function AuthProvider(props: AuthProviderProps) {
   const navigate = useNavigate();
-  const [authState, setAuthState] = useState<AuthState>({});
+  const [authState, setAuthState] = useState<AuthState>(
+    retriveAuthState() || {}
+  );
 
   const signIn = async (authState: Required<AuthState>) => {
     setAuthState(authState);
@@ -52,13 +54,6 @@ function AuthProvider(props: AuthProviderProps) {
       message: "You have successfully signed out.",
     });
   };
-
-  useEffect(() => {
-    const authState = retriveAuthState();
-    if (authState) {
-      setAuthState(authState);
-    }
-  }, []);
 
   return (
     <AuthContext.Provider

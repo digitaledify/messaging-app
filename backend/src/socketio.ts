@@ -26,8 +26,10 @@ const io = new Server<
 io.use(authenticateSocket);
 
 io.on("connection", (socket) => {
-  socket.on("messages:new_message", handleNewMessage(socket));
+  socket.join(socket.data.user?.username as string);
+
   socket.on("messages:get_old_messages", handleGetMessages(socket));
+  socket.on('messages:new_message', )
 });
 
 export default io;

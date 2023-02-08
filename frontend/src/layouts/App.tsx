@@ -10,7 +10,8 @@ import {
 import { NotificationsProvider } from "@mantine/notifications";
 import { Outlet } from "react-router-dom";
 import AuthProvider from "../contexts/authentication/AuthProvider";
-import { Suspense } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import queryClient from "../lib/query-client";
 
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -26,7 +27,7 @@ function App() {
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
 
   return (
-    <Suspense fallback={<Loader />}>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ColorSchemeProvider
           colorScheme={colorScheme}
@@ -45,7 +46,7 @@ function App() {
           </MantineProvider>
         </ColorSchemeProvider>
       </AuthProvider>
-    </Suspense>
+    </QueryClientProvider>
   );
 }
 

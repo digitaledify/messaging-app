@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { APIError, CreateMessageData, Message, MessagesPaginationCursor } from ".";
+import { APIError, ChatType, CreateMessageData, Message, MessagesPaginationCursor } from ".";
 
 
 export interface ServerToClientEvents {
@@ -16,12 +16,12 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   "messages:new_message": (message: CreateMessageData) => void;
   "messages:get_old_messages": (
-    cursor: MessagesPaginationCursor,
-    callback: (page: {
-      data: Message[];
-      nextCursor: MessagesPaginationCursor;
-    }) => void
+    cursor: string | null,
+    chatType: ChatType,
+    to: string,
+    callback: (page: { data: Message[]; nextCursor: string | null }) => void
   ) => void;
 }
+
 
 export type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents>;

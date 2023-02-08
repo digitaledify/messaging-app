@@ -159,7 +159,6 @@ export function NavbarSearch() {
   const usersQuery = useQuery({
     queryKey: [QueryKeys.users.users_list],
     queryFn: getUsersList,
-    suspense: true,
   });
 
   const mainLinks = links.map((link) => (
@@ -203,8 +202,8 @@ export function NavbarSearch() {
         <Text
           component={Link}
           to={{
-            pathname: generatePath("/chat/:usernameOrChannelName", {
-              usernameOrChannelName: user.username,
+            pathname: generatePath("/chat/dm/:username", {
+              username: user.username,
             }),
             search: `?chatType=dm`,
           }}

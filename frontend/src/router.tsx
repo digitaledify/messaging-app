@@ -13,27 +13,26 @@ import { SignIn } from "./pages/sign-in";
 import { SignUp } from "./pages/sign-up";
 import chatPage from "./pages/chat";
 import GenericError from "./components/GenericError";
-import ChatLayout from "./layouts/ChatLayout";
 
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
     children: [
       {
-        path: "/sign-in",
+        path: "sign-in",
         element: <SignIn />,
       },
       {
-        path: "/sign-up",
+        path: "sign-up",
         element: <SignUp />,
       },
       {
-        path: "/forgot-password",
+        path: "forgot-password",
         element: <ForgotPassword />,
       },
       {
-        path: "/reset-password",
+        path: "reset-password",
         element: <ResetPassword />,
       },
       {
@@ -41,24 +40,29 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
           {
-            path: "/bot",
+            path: "bot",
             element: <Bot />,
           },
           {
-            path: "/notifications",
+            path: "notifications",
             element: <Notifications />,
           },
           {
-            path: "/me",
+            path: "me",
             element: <Me />,
           },
           {
-            path: "/chat",
-            element: <ChatLayout />,
+            path: "chat",
             children: [
               {
-                path: ":usernameOrChannelName",
-                element: <chatPage.Page />,
+                path: "dm/:username",
+                element: <chatPage.Page chatType="dm" />,
+                loader: chatPage.loader,
+                errorElement: <GenericError />,
+              },
+              {
+                path: "channel/:channelName",
+                element: <chatPage.Page chatType="channel" />,
                 loader: chatPage.loader,
                 errorElement: <GenericError />,
               },

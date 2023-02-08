@@ -1,7 +1,6 @@
 import { expressjwt } from "express-jwt";
 import { config } from "../../../src/config";
 import { SocketIOMiddleware } from "../../../src/types/socketio";
-import jwt from "jsonwebtoken";
 import { getAuthTokenPayload } from "../../auth-utils";
 import { pick } from "../../util";
 import publicRoutes from "./public-routes";
@@ -18,7 +17,6 @@ function authenticate() {
 
 export const authenticateSocket: SocketIOMiddleware = (socket, next) => {
   const token = socket.handshake.auth.token;
-  console.log("🚀 ~ file: index.ts:21 ~ token", token);
   if (!token) {
     next(new Error("Auth token not found."));
     return;

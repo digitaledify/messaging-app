@@ -13,6 +13,7 @@ const configSchema = z.object({
   FRONTEND_URL: z.string().url().default("http://localhost:5173"),
   SENDGRID_FROM_EMAIL: EmailQueryParamsSchema.shape.email,
   OPENAI_API_KEY: z.string().optional(),
+  NODE_ENV: z.enum(["development", "production"]).default("production"),
 });
 
 export type Config = z.infer<typeof configSchema>;

@@ -36,7 +36,7 @@ export const ResetPasswordSchema = z.object({
   confirmPassword: PasswordSchema,
 });
 
-export const ChatTypeSchema = z.enum(["dm", "channel"]).optional();
+export const ChatTypeSchema = z.enum(["dm", "channel"]);
 
 export const MessagesPaginationCursorSchema = z
   .object({
@@ -52,8 +52,7 @@ export const MessagesPaginationCursorSchema = z
     })
   );
 
-
-  export const CreateMessageSchema = z
+export const CreateMessageSchema = z
   .object({
     chatType: z.literal("dm"),
     text: z.string().min(1),

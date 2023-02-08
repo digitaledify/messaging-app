@@ -24,3 +24,5 @@ export const EmailSchema = z
 export const EmailQueryParamsSchema = z.object({
   email: EmailSchema,
 });
+
+export const ChatTypeSchema = z.enum(["dm", "channel"]);

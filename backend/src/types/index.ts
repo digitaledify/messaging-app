@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EmailQueryParamsSchema } from "../../lib/zod-schemas";
+import { ChatTypeSchema, EmailQueryParamsSchema } from "../../lib/zod-schemas";
 import {
   CreateMessageSchema,
   MessagesPaginationCursorSchema,
@@ -36,3 +36,5 @@ export type MessagesPaginationCursor = z.infer<
 >;
 
 export type CreateMessageData = z.infer<typeof CreateMessageSchema>;
+
+export type ChatType = z.infer<typeof ChatTypeSchema>;
