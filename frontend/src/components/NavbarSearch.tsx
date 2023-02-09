@@ -110,6 +110,12 @@ export function NavbarSearch() {
   const auth = useAuth();
   const params = ChatPageParamsSchema.parse(useParams());
 
+  const foucsChatTextInput = () => {
+    const element = document.getElementById(
+      "chat-text-input"
+    ) as HTMLInputElement | null;
+    element?.focus();
+  };
   const userLinks = usersQuery.isSuccess
     ? matchSorter(usersQuery.data, search, { keys: ["username", "name"] })
         .filter((user) => user.username !== auth.user?.username)
@@ -118,6 +124,7 @@ export function NavbarSearch() {
             params.chatType === "dm" && params.name === user.username;
           return (
             <Text
+              onClick={foucsChatTextInput}
               component={NavLink}
               color="dark"
               to={{
@@ -146,6 +153,7 @@ export function NavbarSearch() {
 
         return (
           <Text
+            onClick={foucsChatTextInput}
             component={NavLink}
             color="dark"
             to={{

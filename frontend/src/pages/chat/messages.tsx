@@ -141,6 +141,7 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
           rightSection={<IconSend />}
           autoComplete="off"
           placeholder="Type here.."
+          id="chat-text-input"
         />
         <Space h={10} />
       </Box>
