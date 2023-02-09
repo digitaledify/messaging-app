@@ -14,6 +14,8 @@ import {
 } from "@mantine/core";
 import { IconSearch, IconPlus, IconUser } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
+import { matchSorter } from "match-sorter";
+import { useState } from "react";
 import { generatePath, NavLink, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { getChannelsList } from "../lib/api/channels";
@@ -95,6 +97,7 @@ const useStyles = createStyles((theme) => {
 
 export function NavbarSearch() {
   const { classes } = useStyles();
+  const [search, setSearch] = useState("");
   const usersQuery = useQuery({
     queryKey: [QueryKeys.users.users_list],
     queryFn: getUsersList,
@@ -108,7 +111,7 @@ export function NavbarSearch() {
   const params = ChatPageParamsSchema.parse(useParams());
 
   const userLinks = usersQuery.isSuccess
-    ? usersQuery.data
+    ? matchSorter(usersQuery.data, search, { keys: ["username", "name"] })
         .filter((user) => user.username !== auth.user?.username)
         .map((user) => {
           const isLinkActive =
@@ -135,7 +138,9 @@ export function NavbarSearch() {
     : [];
 
   const channelLinks = channelsQuery.isSuccess
-    ? channelsQuery.data.map((channel) => {
+    ? matchSorter(channelsQuery.data, search, {
+        keys: ["name"],
+      }).map((channel) => {
         const isLinkActive =
           params.chatType === "channel" && params.name === channel.name;
 
@@ -179,6 +184,8 @@ export function NavbarSearch() {
         <TextInput
           placeholder="Search"
           size="xs"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
           px={"md"}
           icon={<IconSearch size={12} stroke={1.5} />}
           rightSectionWidth={70}
