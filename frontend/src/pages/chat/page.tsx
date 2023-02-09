@@ -5,6 +5,7 @@ import { ColorSchemeToggle } from "../../components/ColorSchemeToggle";
 import { ChatProfile } from "../../components/ChatProfile";
 import { useChatContext } from "../../layouts/ChatLayout";
 import Messages from "./messages";
+import DeleteChannel from "./components/DeleteChannel";
 
 function Page() {
   const { getMessages, room } = useChatContext();
@@ -41,6 +42,7 @@ function Page() {
             >
               <IconAdjustments />
             </ActionIcon>
+            <DeleteChannel />
             <ColorSchemeToggle />
           </Flex>
         </Flex>

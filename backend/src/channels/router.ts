@@ -16,9 +16,8 @@ channelsRouter
 
 channelsRouter
   .route("/:channelName")
-  .get(
-    validator(ChannelNameParamsSchema, "params"),
-    channelHandlers.getChannelHandler
-  );
+  .all(validator(ChannelNameParamsSchema, "params"))
+  .get(channelHandlers.getChannelHandler)
+  .delete(channelHandlers.deleteChannelHandler);
 
 export default channelsRouter;

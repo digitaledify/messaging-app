@@ -1,12 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Group,
-  MultiSelect,
-  Stack,
-  TextInput,
-} from "@mantine/core";
+import { Button, Group, MultiSelect, Stack, TextInput } from "@mantine/core";
 import { openModal, closeAllModals } from "@mantine/modals";
+import { ModalSettings } from "@mantine/modals/lib/context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { generatePath, useNavigate } from "react-router-dom";
@@ -16,10 +11,12 @@ import QueryKeys from "../../lib/query-keys";
 import { CreateChannelDataSchema } from "../../lib/zod-schemas";
 import { Channel, CreateChannelData } from "../../types";
 
-const openCreateChannel = () => {
+const openCreateChannel = (modalOptions: ModalSettings) => {
   openModal({
     title: "Create new channel",
     children: <CreateChannelModal />,
+    centered: true,
+    ...modalOptions,
   });
 };
 
@@ -36,10 +33,6 @@ function CreateChannelModal() {
   } = useForm<CreateChannelData>({
     resolver: zodResolver(CreateChannelDataSchema),
   });
-  console.log(
-    "🚀 ~ file: CreateChannelModal.tsx:37 ~ CreateChannelModal ~ errors",
-    errors
-  );
 
   const users =
     usersQuery.data?.map((user) => ({
@@ -67,6 +60,7 @@ function CreateChannelModal() {
           chatType: "channel",
         })
       );
+      closeAllModals();
     },
   });
 
@@ -100,7 +94,9 @@ function CreateChannelModal() {
           )}
         />
         <Group position="right">
-          <Button type="submit">Create</Button>
+          <Button type="submit" loading={mutation.isLoading}>
+            Create
+          </Button>
           <Button
             variant="outline"
             type="button"

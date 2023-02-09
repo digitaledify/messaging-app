@@ -10,11 +10,7 @@ import {
   ScrollArea,
   Title,
 } from "@mantine/core";
-import {
-  IconSearch,
-  IconPlus,
-  IconSettings2,
-} from "@tabler/icons";
+import { IconSearch, IconPlus, IconUser } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
 import { generatePath, NavLink } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
@@ -74,10 +70,6 @@ const useStyles = createStyles((theme) => ({
     textDecoration: "none",
     borderRadius: theme.radius.sm,
     fontSize: theme.fontSizes.md,
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[0]
-        : theme.colors.gray[7],
     lineHeight: 1,
     fontWeight: 500,
 
@@ -134,7 +126,6 @@ export function NavbarSearch() {
                 chatType: "dm",
               }),
             }}
-            // onClick={(event) => event.preventDefault()}
             key={user.email}
             className={classes.collectionLink}
           >
@@ -153,7 +144,7 @@ export function NavbarSearch() {
             </Title>
           </Group>
           <ActionIcon component={NavLink} to="/me">
-            <IconSettings2 color="blue" />
+            <IconUser color="blue" />
           </ActionIcon>
         </Group>
       </Navbar.Section>

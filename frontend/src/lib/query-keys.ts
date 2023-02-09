@@ -13,6 +13,7 @@ const QueryKeys = {
   },
   channels: {
     create_channel: 'create_channel',
+    delete_channel: 'delete_channel',
     channels_list: "channels_list",
 
   }

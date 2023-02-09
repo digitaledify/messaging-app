@@ -80,6 +80,7 @@ export const CreateChannelDataSchema = z.object({
   name: z
     .string()
     .trim()
+    .min(6)
     .transform((v) => v.toLowerCase()),
   channelMembers: z
     .string()
