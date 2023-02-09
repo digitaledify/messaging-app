@@ -1,6 +1,6 @@
 import { Router } from "express";
 import validator from "../../lib/middleware/validator";
-import { ChannelNameParamsSchema, UsernameParamsSchema } from "../../lib/zod-schemas";
+import { ChannelNameParamsSchema } from "../../lib/zod-schemas";
 import channelHandlers from "./handlers";
 import { CreateChannelDataSchema } from "./zod-schemas";
 

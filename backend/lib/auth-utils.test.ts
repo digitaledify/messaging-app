@@ -1,4 +1,4 @@
-import { JsonWebTokenError, JwtPayload, sign } from "jsonwebtoken";
+import { JsonWebTokenError, sign } from "jsonwebtoken";
 import { config } from "../src/config";
 import { SafeUser } from "../src/types";
 import {
@@ -7,7 +7,7 @@ import {
   getAuthTokenPayload,
   getPasswordResetTokenPayload,
 } from "./auth-utils";
-import { pick, toBase64 } from "./util";
+import { toBase64 } from "./util";
 
 describe("Test auth utils", () => {
   it("Reset link decodes given jwt correctly", () => {

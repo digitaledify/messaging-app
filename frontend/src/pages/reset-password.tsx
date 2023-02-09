@@ -15,12 +15,7 @@ import {
 import { IconArrowLeft } from "@tabler/icons";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import {
-  Link,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import http from "../lib/http";
 import { notify } from "../lib/notifications";
 import QueryKeys from "../lib/query-keys";

@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { APIError, ChatType, CreateMessageData, Message, MessagesPaginationCursor } from ".";
+import { APIError, ChatType, CreateMessageData, Message } from ".";
 
 
 export interface ServerToClientEvents {

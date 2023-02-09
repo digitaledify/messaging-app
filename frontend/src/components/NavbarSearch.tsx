@@ -3,8 +3,6 @@ import {
   Navbar,
   TextInput,
   Code,
-  UnstyledButton,
-  Badge,
   Text,
   Group,
   ActionIcon,
@@ -13,25 +11,17 @@ import {
   Title,
 } from "@mantine/core";
 import {
-  IconBulb,
-  IconUser,
-  IconCheckbox,
   IconSearch,
   IconPlus,
-  IconMessageCircle,
-  IconUserCircle,
   IconSettings2,
 } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
-import { generatePath, Link, NavLink } from "react-router-dom";
+import { generatePath, NavLink } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { getChannelsList } from "../lib/api/channels";
 import { getUsersList } from "../lib/api/users";
 import QueryKeys from "../lib/query-keys";
-import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import openCreateChannel from "./modals/CreateChannelModal";
-import CreateChannelModal from "./modals/CreateChannelModal";
-import { ChatProfile } from "./ChatProfile";
 
 const useStyles = createStyles((theme) => ({
   navbar: {

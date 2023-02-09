@@ -4,7 +4,6 @@ import { useLocalStorage, useHotkeys } from "@mantine/hooks";
 import {
   ColorScheme,
   ColorSchemeProvider,
-  Loader,
   MantineProvider,
 } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";

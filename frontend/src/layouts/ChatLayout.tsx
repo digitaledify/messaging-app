@@ -1,4 +1,3 @@
-import { IconBuildingLighthouse } from "@tabler/icons";
 import { useEffect, useState } from "react";
 import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";

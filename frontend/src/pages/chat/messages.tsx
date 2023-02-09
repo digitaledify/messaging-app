@@ -2,7 +2,6 @@ import {
   Box,
   Card,
   ScrollArea,
-  ScrollAreaProps,
   Space,
   Stack,
   Text,
@@ -17,7 +16,6 @@ import { Message } from "../../types";
 
 type MessagesProps = {
   messages: Message[];
-  // handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"];
 };
 
 const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
@@ -26,7 +24,7 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
 ) {
   const auth = useAuth();
   const [text, setText] = useState("");
-  const { usernameOrChannelName, chatType, room } = useChatContext();
+  const { usernameOrChannelName, chatType } = useChatContext();
   const handleMessageSubmit: React.KeyboardEventHandler<HTMLInputElement> = (
     event
   ) => {

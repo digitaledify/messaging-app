@@ -1,8 +1,7 @@
 import { generatePath, LoaderFunction } from "react-router-dom";
-import { z } from "zod";
 import http from "../../lib/http";
 import { ChatPageParamsSchema } from "../../lib/zod-schemas";
-import { Channel, ChannelWithUsers, User } from "../../types";
+import {  ChannelWithUsers, User } from "../../types";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const validatedParams = ChatPageParamsSchema.parse(params);

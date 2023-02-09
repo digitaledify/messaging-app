@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AuthState } from "../../types";
 import AuthContext from "./AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   destroyAuthState,
   persistAuthState,

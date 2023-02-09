@@ -1,55 +1,14 @@
-import {
-  Stack,
-  Box,
-  Divider,
-  ScrollAreaProps,
-  Group,
-  Flex,
-  ActionIcon,
-} from "@mantine/core";
-import { IconAdjustments, IconEdit, IconEditCircle, IconSelector, IconSettings, IconSettingsAutomation } from "@tabler/icons";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useLoaderData, useParams } from "react-router-dom";
-import { z } from "zod";
+import { Stack, Box, Divider, Flex, ActionIcon } from "@mantine/core";
+import { IconAdjustments } from "@tabler/icons";
+import { useRef } from "react";
 import { ColorSchemeToggle } from "../../components/ColorSchemeToggle";
 import { ChatProfile } from "../../components/ChatProfile";
-import useAuth from "../../hooks/useAuth";
 import { useChatContext } from "../../layouts/ChatLayout";
-import socket from "../../lib/socketio";
-import { Channel, ChatType, Message, User } from "../../types";
 import Messages from "./messages";
 
 function Page() {
-  const data = useLoaderData() as User | Channel;
   const { getMessages, room } = useChatContext();
   const viewport = useRef<HTMLDivElement>(null);
-
-  // const scrollToBottom = () => {
-  //   if (viewport.current) {
-  //     viewport.current.scrollTo({
-  //       top: viewport.current.scrollHeight,
-  //       behavior: "smooth",
-  //     });
-  //     viewport.current.scrollIntoView();
-  //   }
-  // };
-
-  // const handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"] =
-  //   (position) => {
-  //     if (position.y === 0 && cursor) {
-  //       socket.emit(
-  //         "messages:get_old_messages",
-  //         cursor,
-  //         props.chatType,
-  //         username,
-  //         (page) => {
-  //           setMessages((prevMessages) => [...page.data, ...prevMessages]);
-  //           setCursor(page.nextCursor);
-  //           scrollToBottom();
-  //         }
-  //       );
-  //     }
-  //   };
 
   const messages = getMessages(room);
 

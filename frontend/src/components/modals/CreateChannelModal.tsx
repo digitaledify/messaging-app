@@ -1,16 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Box,
   Button,
   Group,
   MultiSelect,
   Stack,
   TextInput,
-  Title,
 } from "@mantine/core";
 import { openModal, closeAllModals } from "@mantine/modals";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { generatePath, useNavigate } from "react-router-dom";
 import { getUsersList } from "../../lib/api/users";

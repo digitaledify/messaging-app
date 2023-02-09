@@ -1,14 +1,7 @@
-import { log } from "console";
 import openai from "../../lib/openai";
 import { config } from "../config";
 
 async function main() {
-  const buffer = new Uint8Array([3, 23, 2, 22, 45]);
-  const blob = new Blob(["Hello", buffer, new Blob(["World"])], {
-    type: "text/plain",
-  });
-
-
   console.log(
     "🚀 ~ file: index.ts:14 ~ main ~ config.OPENAI_API_KEY",
     config.OPENAI_API_KEY

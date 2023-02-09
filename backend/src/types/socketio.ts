@@ -1,13 +1,7 @@
 import { Message } from "@prisma/client";
 import { Socket } from "socket.io";
 import { ExtendedError } from "socket.io/dist/namespace";
-import {
-  APIError,
-  ChatType,
-  CreateMessageData,
-  MessagesPaginationCursor,
-  SafeUser,
-} from ".";
+import { APIError, ChatType, CreateMessageData, SafeUser } from ".";
 
 export interface ServerToClientEvents {
   noArg: () => void;

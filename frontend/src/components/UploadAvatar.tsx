@@ -1,7 +1,6 @@
 import { Text, Image, Space } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from "@mantine/dropzone";
-import React, { forwardRef } from "react";
-import { Control, Ref, useController } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 import { convertImageToDataUrl } from "../lib/files";
 import { notify } from "../lib/notifications";
 import { UpdateUserData } from "../types";

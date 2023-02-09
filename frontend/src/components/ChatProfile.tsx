@@ -1,23 +1,17 @@
 import {
-  UnstyledButton,
-  UnstyledButtonProps,
   Group,
   Avatar,
   Text,
   createStyles,
   Box,
-  ActionIcon,
   Stack,
 } from "@mantine/core";
 import {
-  IconChevronRight,
-  IconEdit,
-  IconPencil,
   IconUsers,
 } from "@tabler/icons";
 import { useLoaderData, useParams } from "react-router-dom";
 import { ChatPageParamsSchema } from "../lib/zod-schemas";
-import { Channel, ChannelWithUsers, User } from "../types";
+import { ChannelWithUsers, User } from "../types";
 
 const useStyles = createStyles((theme) => ({
   user: {
