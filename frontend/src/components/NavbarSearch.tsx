@@ -9,79 +9,89 @@ import {
   Tooltip,
   ScrollArea,
   Title,
+  clsx,
+  CSSObject,
 } from "@mantine/core";
 import { IconSearch, IconPlus, IconUser } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
-import { generatePath, NavLink } from "react-router-dom";
+import { generatePath, NavLink, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { getChannelsList } from "../lib/api/channels";
 import { getUsersList } from "../lib/api/users";
 import QueryKeys from "../lib/query-keys";
+import { ChatPageParamsSchema } from "../lib/zod-schemas";
 import openCreateChannel from "./modals/CreateChannelModal";
 
-const useStyles = createStyles((theme) => ({
-  navbar: {
-    paddingTop: 0,
-  },
+const useStyles = createStyles((theme) => {
+  const linkActiveOrHoverStyles: CSSObject = {
+    backgroundColor: theme.colors.blue[9],
+    color: theme.white,
+  };
 
-  section: {
-    // marginLeft: -theme.spacing.md,
-    // marginRight: -theme.spacing.md,
-    marginBottom: theme.spacing.md,
-
-    "&:not(:last-of-type)": {
-      borderBottom: `1px solid ${
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[4]
-          : theme.colors.gray[3]
-      }`,
+  return {
+    navbar: {
+      paddingTop: 0,
     },
-  },
 
-  searchCode: {
-    fontWeight: 700,
-    fontSize: 10,
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[7]
-        : theme.colors.gray[0],
-    border: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
-    }`,
-  },
+    section: {
+      // marginLeft: -theme.spacing.md,
+      // marginRight: -theme.spacing.md,
+      marginBottom: theme.spacing.md,
 
-  collections: {
-    paddingLeft: theme.spacing.md - 6,
-    paddingRight: theme.spacing.md - 6,
-    paddingBottom: theme.spacing.md,
-  },
+      "&:not(:last-of-type)": {
+        borderBottom: `1px solid ${
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[4]
+            : theme.colors.gray[3]
+        }`,
+      },
+    },
 
-  collectionsHeader: {
-    paddingLeft: theme.spacing.md + 2,
-    paddingRight: theme.spacing.md,
-    marginBottom: 5,
-  },
-
-  collectionLink: {
-    display: "flex",
-    flexDirection: "column",
-    gap: theme.spacing.xs,
-    padding: `8px ${theme.spacing.xs}px`,
-    textDecoration: "none",
-    borderRadius: theme.radius.sm,
-    fontSize: theme.fontSizes.md,
-    lineHeight: 1,
-    fontWeight: 500,
-
-    "&:hover": {
+    searchCode: {
+      fontWeight: 700,
+      fontSize: 10,
       backgroundColor:
         theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
+          ? theme.colors.dark[7]
           : theme.colors.gray[0],
-      color: theme.colorScheme === "dark" ? theme.white : theme.black,
+      border: `1px solid ${
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[7]
+          : theme.colors.gray[2]
+      }`,
     },
-  },
-}));
+
+    links: {
+      paddingLeft: theme.spacing.md - 6,
+      paddingRight: theme.spacing.md - 6,
+      paddingBottom: theme.spacing.md,
+    },
+
+    linksHeader: {
+      paddingLeft: theme.spacing.md + 2,
+      paddingRight: theme.spacing.md,
+      marginBottom: 5,
+    },
+
+    chatLink: {
+      display: "flex",
+      flexDirection: "column",
+      gap: theme.spacing.xs,
+      padding: `8px ${theme.spacing.xs}px`,
+      textDecoration: "none",
+      borderRadius: theme.radius.sm,
+      fontSize: theme.fontSizes.sm,
+      lineHeight: 1,
+      fontWeight: 500,
+      marginBottom: 4,
+      color: theme.colorScheme === "dark" ? theme.white : theme.black,
+
+      "&:hover": linkActiveOrHoverStyles,
+    },
+
+    activeChatLink: linkActiveOrHoverStyles,
+  };
+});
 
 export function NavbarSearch() {
   const { classes } = useStyles();
@@ -94,44 +104,60 @@ export function NavbarSearch() {
     queryFn: getChannelsList,
   });
 
-  const channelLinks = channelsQuery.isSuccess
-    ? channelsQuery.data.map((channel) => (
-        <Text
-          component={NavLink}
-          to={{
-            pathname: generatePath("/chat/:chatType/:name", {
-              name: channel.name,
-              chatType: "channel",
-            }),
-          }}
-          // onClick={(event) => event.preventDefault()}
-          key={channel.name}
-          className={classes.collectionLink}
-        >
-          <span>{channel.name}</span>
-        </Text>
-      ))
-    : [];
-
   const auth = useAuth();
+  const params = ChatPageParamsSchema.parse(useParams());
+
   const userLinks = usersQuery.isSuccess
     ? usersQuery.data
         .filter((user) => user.username !== auth.user?.username)
-        .map((user) => (
+        .map((user) => {
+          const isLinkActive =
+            params.chatType === "dm" && params.name === user.username;
+          return (
+            <Text
+              component={NavLink}
+              color="dark"
+              to={{
+                pathname: generatePath("/chat/:chatType/:name", {
+                  name: user.username,
+                  chatType: "dm",
+                }),
+              }}
+              key={user.email}
+              className={clsx(classes.chatLink, {
+                [classes.activeChatLink]: isLinkActive,
+              })}
+            >
+              <span>{user.name}</span>
+            </Text>
+          );
+        })
+    : [];
+
+  const channelLinks = channelsQuery.isSuccess
+    ? channelsQuery.data.map((channel) => {
+        const isLinkActive =
+          params.chatType === "channel" && params.name === channel.name;
+
+        return (
           <Text
             component={NavLink}
+            color="dark"
             to={{
               pathname: generatePath("/chat/:chatType/:name", {
-                name: user.username,
-                chatType: "dm",
+                name: channel.name,
+                chatType: "channel",
               }),
             }}
-            key={user.email}
-            className={classes.collectionLink}
+            key={channel.name}
+            className={clsx(classes.chatLink, {
+              [classes.activeChatLink]: isLinkActive,
+            })}
           >
-            <span>{user.name}</span>
+            <span>{channel.name}</span>
           </Text>
-        ))
+        );
+      })
     : [];
 
   return (
@@ -164,16 +190,16 @@ export function NavbarSearch() {
 
       <ScrollArea type="never">
         <Navbar.Section className={classes.section}>
-          <Group className={classes.collectionsHeader} position="apart">
+          <Group className={classes.linksHeader} position="apart">
             <Text size="xs" weight={500} color="dimmed">
               Direct messages
             </Text>
           </Group>
-          <div className={classes.collections}>{userLinks}</div>
+          <div className={classes.links}>{userLinks}</div>
         </Navbar.Section>
 
         <Navbar.Section className={classes.section}>
-          <Group className={classes.collectionsHeader} position="apart">
+          <Group className={classes.linksHeader} position="apart">
             <Text size="xs" weight={500} color="dimmed">
               Channels
             </Text>
@@ -187,7 +213,7 @@ export function NavbarSearch() {
               </ActionIcon>
             </Tooltip>
           </Group>
-          <div className={classes.collections}>{channelLinks}</div>
+          <div className={classes.links}>{channelLinks}</div>
         </Navbar.Section>
       </ScrollArea>
     </Navbar>

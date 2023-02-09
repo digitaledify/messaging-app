@@ -11,12 +11,12 @@ import QueryKeys from "../../lib/query-keys";
 import { CreateChannelDataSchema } from "../../lib/zod-schemas";
 import { Channel, CreateChannelData } from "../../types";
 
-const openCreateChannel = (modalOptions: ModalSettings) => {
+const openCreateChannel = (modalOptions?: ModalSettings) => {
   openModal({
     title: "Create new channel",
     children: <CreateChannelModal />,
     centered: true,
-    ...modalOptions,
+    ...(modalOptions || {}),
   });
 };
 
