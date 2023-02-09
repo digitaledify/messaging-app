@@ -56,6 +56,8 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
         sx={{
           height: "100%",
         }}
+        offsetScrollbars
+        p={'xl'}
         ref={ref}
         // onScrollPositionChange={props.handleScrollPositionChange}
       >
@@ -67,7 +69,7 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
                   key={message.id}
                   shadow={"sm"}
                   withBorder
-                  w={"60%"}
+                  w={"90%"}
                   mr="auto"
                   radius={"md"}
                   sx={(theme) => ({
@@ -88,7 +90,7 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
                     <Text
                       color={"dimmed"}
                       sx={(theme) => ({
-                        color: theme.white,
+                        color: theme.colors.gray[3],
                       })}
                       size="xs"
                       p={"xs"}
@@ -106,7 +108,7 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
                 radius={"md"}
                 withBorder
                 key={message.id}
-                w={"60%"}
+                w={"90%"}
                 ml="auto"
               >
                 <Card.Section>
