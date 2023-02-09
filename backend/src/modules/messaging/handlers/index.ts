@@ -4,11 +4,7 @@ import { sanitizeError } from "../../../../lib/errors";
 import io from "../../../socketio";
 import { SocketEventHandler } from "../../../types/util";
 import createMessage from "../repository/create-message";
-import getOldMessagesAsPage from "../repository/get-old-messages-page";
-import {
-  CreateMessageSchema,
-  MessagesPaginationCursorSchema,
-} from "../zod-schemas";
+import { CreateMessageSchema } from "../zod-schemas";
 
 export const handleNewMessage: SocketEventHandler<"messages:new_message"> =
   (socket) => async (message) => {
@@ -25,29 +21,42 @@ export const handleNewMessage: SocketEventHandler<"messages:new_message"> =
       return;
     }
 
-    io.emit("messages:new_message", newMessage);
+    // Room for DM: {{sender's username}}-{{receiver's username}}
+    // Room for Channels {{channelName}}
+    const targetRoom =
+      message.chatType === "dm"
+        ? [socket.data.user?.username, message.username].sort().join("-")
+        : message.channelName;
+    io.to(targetRoom).emit("messages:new_message", newMessage);
   };
 
 export const handleGetMessages: SocketEventHandler<
   "messages:get_old_messages"
 > = (socket) => async (cursor, chatType, to, callback) => {
-  console.log("lol, im");
-
-  if (chatType === "channel") {
-    throw new Error("not implemented");
-  }
-
   let messages;
   try {
     // Cursor not available, for first time.
+    const where =
+      chatType === "dm"
+        ? {
+            OR: [
+              {
+                fromUsername: to,
+                toUsername: socket.data.user?.username,
+              },
+              {
+                toUsername: to,
+                fromUsername: socket.data.user?.username,
+              },
+            ],
+          }
+        : { channelName: to };
     if (!cursor) {
       messages = await db.message.findMany({
         take: 20,
-        where: {
-          toUsername: to,
-        },
+        where,
         orderBy: {
-          time: "desc",
+          time: "asc",
         },
       });
     } else {
@@ -55,11 +64,9 @@ export const handleGetMessages: SocketEventHandler<
       messages = await db.message.findMany({
         take: 20,
         skip: 1, // Skip the cursor
-        where: {
-          toUsername: to,
-        },
+        where,
         orderBy: {
-          time: "desc",
+          time: "asc",
         },
         cursor: {
           id: cursor,
@@ -73,9 +80,5 @@ export const handleGetMessages: SocketEventHandler<
 
   const nextCursor = messages.length === 20 ? messages[19].id : null;
 
-  console.log("🚀 ~ file: index.ts:76 ~ >= ~ { data: messages, nextCursor }", {
-    data: messages,
-    nextCursor,
-  });
   callback({ data: messages, nextCursor });
 };

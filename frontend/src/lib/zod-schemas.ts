@@ -37,6 +37,16 @@ export const ResetPasswordSchema = z.object({
 });
 
 export const ChatTypeSchema = z.enum(["dm", "channel"]);
+export const ChatPageParamsSchema = z.discriminatedUnion("chatType", [
+  z.object({
+    name: z.string().min(6),
+    chatType: z.literal("channel"),
+  }),
+  z.object({
+    name: z.string().min(6),
+    chatType: z.literal("dm"),
+  }),
+]);
 
 export const MessagesPaginationCursorSchema = z
   .object({
@@ -65,3 +75,17 @@ export const CreateMessageSchema = z
       channelName: z.string().min(6),
     })
   );
+
+export const CreateChannelDataSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .transform((v) => v.toLowerCase()),
+  channelMembers: z
+    .string()
+    .min(6)
+    .trim()
+    .transform((v) => v.toLowerCase())
+    .array()
+    .min(1),
+});

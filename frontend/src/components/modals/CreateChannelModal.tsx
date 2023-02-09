@@ -1,24 +1,120 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Box,
+  Button,
+  Group,
+  MultiSelect,
+  Stack,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { openModal, closeAllModals } from "@mantine/modals";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Modal, Button, Group } from "@mantine/core";
+import { Controller, useForm } from "react-hook-form";
+import { generatePath, useNavigate } from "react-router-dom";
+import { getUsersList } from "../../lib/api/users";
+import http from "../../lib/http";
+import QueryKeys from "../../lib/query-keys";
+import { CreateChannelDataSchema } from "../../lib/zod-schemas";
+import { Channel, CreateChannelData } from "../../types";
+
+const openCreateChannel = () => {
+  openModal({
+    title: "Create new channel",
+    children: <CreateChannelModal />,
+  });
+};
 
 function CreateChannelModal() {
-  const [opened, setOpened] = useState(false);
+  const usersQuery = useQuery({
+    queryKey: [QueryKeys.users.users_list],
+    queryFn: getUsersList,
+  });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+  } = useForm<CreateChannelData>({
+    resolver: zodResolver(CreateChannelDataSchema),
+  });
+  console.log(
+    "🚀 ~ file: CreateChannelModal.tsx:37 ~ CreateChannelModal ~ errors",
+    errors
+  );
+
+  const users =
+    usersQuery.data?.map((user) => ({
+      value: user.username,
+      label: user.name,
+    })) || [];
+
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const mutation = useMutation({
+    mutationKey: [QueryKeys.channels.create_channel],
+    mutationFn: async (data: CreateChannelData) => {
+      const res = await http.post("/channels", data);
+      return res.data;
+    },
+    onSuccess: (data: Channel) => {
+      queryClient.setQueryData(
+        [QueryKeys.channels.channels_list],
+        (currentData?: Channel[]) =>
+          currentData ? [...currentData, data] : [data]
+      );
+      navigate(
+        generatePath("/chat/:chatType/:name", {
+          name: data.name,
+          chatType: "channel",
+        })
+      );
+    },
+  });
+
+  const onSubmit = (data: CreateChannelData) => {
+    mutation.mutate(data);
+  };
 
   return (
-    <>
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title="Introduce yourself!"
-      >
-        {/* Modal content */}
-      </Modal>
-
-      <Group position="center">
-        <Button onClick={() => setOpened(true)}>Open Modal</Button>
-      </Group>
-    </>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack spacing={"xl"}>
+        <TextInput
+          {...register("name")}
+          label="Channel name"
+          error={errors.name?.message}
+        />
+        <Controller
+          name="channelMembers"
+          control={control}
+          render={({ field }) => (
+            <MultiSelect
+              label="Select users for the new channel"
+              data={users}
+              error={errors.channelMembers?.message}
+              placeholder="Search user"
+              searchable
+              value={field.value}
+              onChange={field.onChange}
+              ref={field.ref}
+              name={field.name}
+            />
+          )}
+        />
+        <Group position="right">
+          <Button type="submit">Create</Button>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => closeAllModals()}
+          >
+            Cancel
+          </Button>
+        </Group>
+      </Stack>
+    </form>
   );
 }
 
-export default CreateChannelModal;
+export default openCreateChannel;

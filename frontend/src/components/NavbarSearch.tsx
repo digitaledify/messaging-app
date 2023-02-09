@@ -21,10 +21,14 @@ import {
   IconMessageCircle,
 } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
-import { generatePath, Link } from "react-router-dom";
+import { generatePath, Link, NavLink } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import { getChannelsList } from "../lib/api/channels";
 import { getUsersList } from "../lib/api/users";
 import QueryKeys from "../lib/query-keys";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
+import openCreateChannel from "./modals/CreateChannelModal";
+import CreateChannelModal from "./modals/CreateChannelModal";
 
 const useStyles = createStyles((theme) => ({
   navbar: {
@@ -160,6 +164,10 @@ export function NavbarSearch() {
     queryKey: [QueryKeys.users.users_list],
     queryFn: getUsersList,
   });
+  const channelsQuery = useQuery({
+    queryKey: [QueryKeys.channels.channels_list],
+    queryFn: getChannelsList,
+  });
 
   const mainLinks = links.map((link) => (
     <UnstyledButton
@@ -180,43 +188,56 @@ export function NavbarSearch() {
     </UnstyledButton>
   ));
 
-  const collectionLinks = usersQuery.isSuccess
-    ? usersQuery.data.map((user) => (
+  const channelLinks = channelsQuery.isSuccess
+    ? channelsQuery.data.map((channel) => (
         <Text
-          component={Link}
-          to={`/chat/${user.username}`}
+          component={NavLink}
+          to={{
+            pathname: generatePath("/chat/:chatType/:name", {
+              name: channel.name,
+              chatType: "channel",
+            }),
+          }}
           // onClick={(event) => event.preventDefault()}
-          key={user.email}
+          key={channel.name}
           className={classes.collectionLink}
         >
-          <span>{user.name}</span>
+          <span>{channel.name}</span>
           <Text size={"xs"} color="dimmed">
-            {user.email}
+            {channel.name}
           </Text>
         </Text>
       ))
     : [];
 
+  const auth = useAuth();
   const userLinks = usersQuery.isSuccess
-    ? usersQuery.data.map((user) => (
-        <Text
-          component={Link}
-          to={{
-            pathname: generatePath("/chat/dm/:username", {
-              username: user.username,
-            }),
-            search: `?chatType=dm`,
-          }}
-          // onClick={(event) => event.preventDefault()}
-          key={user.email}
-          className={classes.collectionLink}
-        >
-          <span>{user.name}</span>
-          <Text size={"xs"} color="dimmed">
-            {user.email}
+    ? usersQuery.data
+        .filter((user) => user.username !== auth.user?.username)
+        .map((user) => (
+          <Text
+            component={NavLink}
+            to={{
+              pathname: generatePath("/chat/:chatType/:name", {
+                name: user.username,
+                chatType: "dm",
+              }),
+            }}
+            // onClick={(event) => event.preventDefault()}
+            key={user.email}
+            className={classes.collectionLink}
+          >
+            <span>
+              {user.name}
+              {auth.user?.username === user.username ? (
+                <IconUser size={14} />
+              ) : null}
+            </span>
+            <Text size={"xs"} color="dimmed">
+              {user.email}
+            </Text>
           </Text>
-        </Text>
-      ))
+        ))
     : [];
 
   return (
@@ -255,12 +276,16 @@ export function NavbarSearch() {
               Channels
             </Text>
             <Tooltip label="Create collection" withArrow position="right">
-              <ActionIcon variant="default" size={18}>
+              <ActionIcon
+                variant="default"
+                onClick={() => openCreateChannel()}
+                size={18}
+              >
                 <IconPlus size={12} stroke={1.5} />
               </ActionIcon>
             </Tooltip>
           </Group>
-          <div className={classes.collections}>{collectionLinks}</div>
+          <div className={classes.collections}>{channelLinks}</div>
         </Navbar.Section>
 
         <Navbar.Section className={classes.section}>

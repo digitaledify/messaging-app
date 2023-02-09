@@ -1,7 +1,9 @@
 import { NotificationProps } from "@mantine/notifications";
 import { z } from "zod";
 import {
+  ChatPageParamsSchema,
   ChatTypeSchema,
+  CreateChannelDataSchema,
   CreateMessageSchema,
   MessagesPaginationCursorSchema,
   ResetPasswordSchema,
@@ -43,10 +45,16 @@ export type Message = {
   channelName: string | null;
 };
 
+export type Channel = {
+  name: string
+}
+
 export type ChatType = z.infer<typeof ChatTypeSchema>;
+export type ChatPageParams = z.infer<typeof ChatPageParamsSchema>;
 
 export type MessagesPaginationCursor = z.infer<
   typeof MessagesPaginationCursorSchema
 >;
 
 export type CreateMessageData = z.infer<typeof CreateMessageSchema>;
+export type CreateChannelData = z.infer<typeof CreateChannelDataSchema>;

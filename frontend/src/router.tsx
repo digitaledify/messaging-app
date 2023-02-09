@@ -13,6 +13,7 @@ import { SignIn } from "./pages/sign-in";
 import { SignUp } from "./pages/sign-up";
 import chatPage from "./pages/chat";
 import GenericError from "./components/GenericError";
+import ChatLayout from "./layouts/ChatLayout";
 
 const router = createBrowserRouter([
   {
@@ -53,16 +54,11 @@ const router = createBrowserRouter([
           },
           {
             path: "chat",
+            element: <ChatLayout />,
             children: [
               {
-                path: "dm/:username",
-                element: <chatPage.Page chatType="dm" />,
-                loader: chatPage.loader,
-                errorElement: <GenericError />,
-              },
-              {
-                path: "channel/:channelName",
-                element: <chatPage.Page chatType="channel" />,
+                path: ":chatType/:name",
+                element: <chatPage.Page />,
                 loader: chatPage.loader,
                 errorElement: <GenericError />,
               },

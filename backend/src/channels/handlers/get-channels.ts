@@ -1,20 +1,11 @@
-import { Channel, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { RequestHandler } from "express";
 import db from "../../../lib/db";
 
 const getChannelsHandler: RequestHandler = async (req, res, next) => {
-  let channels: {
-    channels: Channel[];
-  };
+  let channels;
   try {
-    channels = await db.user.findUniqueOrThrow({
-      where: {
-        username: req.user.username,
-      },
-      select: {
-        channels: true,
-      },
-    });
+    channels = await db.channel.findMany({});
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2025") {

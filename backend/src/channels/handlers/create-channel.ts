@@ -16,9 +16,6 @@ const createChannelHandler: RequestHandler = async (req, res, next) => {
           })),
         },
       },
-      include: {
-        users: true,
-      },
     });
   } catch (error) {
     next(error);

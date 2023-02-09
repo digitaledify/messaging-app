@@ -12,6 +12,7 @@ import { Outlet } from "react-router-dom";
 import AuthProvider from "../contexts/authentication/AuthProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "../lib/query-client";
+import { ModalsProvider } from "@mantine/modals";
 
 function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -40,9 +41,11 @@ function App() {
               colorScheme,
             }}
           >
-            <NotificationsProvider position="top-right">
-              <Outlet />
-            </NotificationsProvider>
+            <ModalsProvider>
+              <NotificationsProvider position="top-right">
+                <Outlet />
+              </NotificationsProvider>
+            </ModalsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
       </AuthProvider>

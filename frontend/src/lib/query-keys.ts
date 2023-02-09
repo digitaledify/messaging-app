@@ -11,6 +11,11 @@ const QueryKeys = {
   messages: {
     get_messages: "get_messages",
   },
+  channels: {
+    create_channel: 'create_channel',
+    channels_list: "channels_list",
+
+  }
 } as const;
 
 export default QueryKeys;

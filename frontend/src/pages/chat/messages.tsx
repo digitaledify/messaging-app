@@ -9,13 +9,15 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSend } from "@tabler/icons";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import { useChatContext } from "../../layouts/ChatLayout";
+import socket from "../../lib/socketio";
 import { Message } from "../../types";
 
 type MessagesProps = {
   messages: Message[];
-  handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"];
+  // handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"];
 };
 
 const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
@@ -23,6 +25,33 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
   ref
 ) {
   const auth = useAuth();
+  const [text, setText] = useState("");
+  const { usernameOrChannelName, chatType ,room} = useChatContext();
+  const handleMessageSubmit: React.KeyboardEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    if (event.code !== "Enter") {
+      return;
+    }
+
+    socket.emit(
+      "messages:new_message",
+      chatType === "dm"
+        ? {
+            chatType,
+            username: usernameOrChannelName,
+            text,
+          }
+        : {
+            chatType,
+            channelName: usernameOrChannelName,
+            text,
+          }
+    );
+
+    setText("");
+  };
+
   return (
     <>
       <ScrollArea
@@ -30,7 +59,7 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
           height: "100%",
         }}
         ref={ref}
-        onScrollPositionChange={props.handleScrollPositionChange}
+        // onScrollPositionChange={props.handleScrollPositionChange}
       >
         <Stack spacing={"xs"}>
           {props.messages.map((message) => {
@@ -105,14 +134,15 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
             );
           })}
         </Stack>
-        <div id="ghost">hai</div>
+        <div id="ghost">{room}</div>
       </ScrollArea>
       <Box>
         <TextInput
-          // value={message}
-          // onChange={(event) => setMessage(event.target.value)}
-          // onKeyDown={handleMessageSubmit}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          onKeyDown={handleMessageSubmit}
           rightSection={<IconSend />}
+          autoComplete="off"
           placeholder="Type here.."
         />
         <Space h={10} />
