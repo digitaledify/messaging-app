@@ -1,3 +1,4 @@
+import { ScrollAreaProps } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
@@ -7,11 +8,11 @@ import { ChatType, CreateMessageData, Message } from "../types";
 
 interface ChatContext {
   getMessages: (room: string) => Message[];
-  getCursor: (room: string) => string | null;
   room: string;
   usernameOrChannelName: string;
   sendMessage: (message: CreateMessageData) => void;
   chatType: ChatType;
+  handleScrollPositionChange: (position: { x: number; y: number }) => void;
 }
 
 function ChatLayout() {
@@ -66,10 +67,30 @@ function ChatLayout() {
     socket.emit("messages:new_message", message);
   };
 
+  const handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"] =
+    (postion) => {
+      const cursor = cursors.get(room) || null;
+      if (postion.y > 200 || !cursor) {
+        return;
+      }
+      socket.emit(
+        "messages:get_old_messages",
+        cursor,
+        params.chatType,
+        room,
+        (page) => {
+          setMessages((messages) =>
+            new Map(messages).set(room, [
+              ...(messages.get(room) || []),
+              ...page.data,
+            ])
+          );
+          setCursors((cursors) => new Map(cursors).set(room, page.nextCursor));
+        }
+      );
+    };
+
   const context: ChatContext = {
-    getCursor(room) {
-      return cursors.get(room) || null;
-    },
     getMessages(room) {
       return messages.get(room) || [];
     },
@@ -77,6 +98,7 @@ function ChatLayout() {
     sendMessage,
     chatType: params.chatType,
     usernameOrChannelName,
+    handleScrollPositionChange,
   };
 
   return (

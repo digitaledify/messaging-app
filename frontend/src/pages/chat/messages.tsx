@@ -24,7 +24,8 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
 ) {
   const auth = useAuth();
   const [text, setText] = useState("");
-  const { usernameOrChannelName, chatType } = useChatContext();
+  const { usernameOrChannelName, chatType, handleScrollPositionChange } =
+    useChatContext();
   const handleMessageSubmit: React.KeyboardEventHandler<HTMLInputElement> = (
     event
   ) => {
@@ -57,9 +58,9 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
           height: "100%",
         }}
         offsetScrollbars
-        p={'xl'}
+        p={"xl"}
         ref={ref}
-        // onScrollPositionChange={props.handleScrollPositionChange}
+        onScrollPositionChange={handleScrollPositionChange}
       >
         <Stack spacing={"xs"}>
           {props.messages.map((message) => {

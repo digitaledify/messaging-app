@@ -51,23 +51,24 @@ export const handleGetMessages: SocketEventHandler<
             ],
           }
         : { channelName: to };
+    const take = 20;
+    const orderBy = {
+      time: "asc",
+    } as const;
+    
     if (!cursor) {
       messages = await db.message.findMany({
-        take: 20,
         where,
-        orderBy: {
-          time: "asc",
-        },
+        take,
+        orderBy,
       });
     } else {
       // Next pages
       messages = await db.message.findMany({
-        take: 20,
+        take,
         skip: 1, // Skip the cursor
         where,
-        orderBy: {
-          time: "asc",
-        },
+        orderBy,
         cursor: {
           id: cursor,
         },
