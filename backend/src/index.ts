@@ -1,7 +1,8 @@
 import logger from "../lib/logger";
 import { config } from "./config";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import "./socketio"; // Start socket.io server
 import httpServer from "./server";
-import "./socketio"; // Start socket-io server.
 
 async function main() {
   httpServer.listen(config.PORT, () => {

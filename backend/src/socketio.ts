@@ -1,11 +1,4 @@
-import httpServer from "./server";
-import { Server } from "socket.io";
-import {
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData,
-} from "./types/socketio";
+import { io } from "./server";
 import { authenticateSocket } from "../lib/middleware/authentication";
 import {
   handleGetMessages,
@@ -13,17 +6,6 @@ import {
 } from "./modules/messaging/handlers";
 import logger from "../lib/logger";
 import db from "../lib/db";
-
-const io = new Server<
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData
->(httpServer, {
-  cors: {
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-  },
-});
 
 io.use(authenticateSocket);
 

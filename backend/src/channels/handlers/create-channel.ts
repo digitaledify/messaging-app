@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import db from "../../../lib/db";
+import io from "../../socketio";
 import { CreateChannelDataSchema } from "../zod-schemas";
 
 const createChannelHandler: RequestHandler = async (req, res, next) => {
@@ -17,6 +18,9 @@ const createChannelHandler: RequestHandler = async (req, res, next) => {
         },
       },
     });
+
+    // Join all existing sockets to this new channel.
+    io.of("/").socketsJoin(channel.name);
   } catch (error) {
     next(error);
     return;
