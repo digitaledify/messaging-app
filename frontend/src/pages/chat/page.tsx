@@ -1,18 +1,27 @@
-import { Stack, Box, Divider, ScrollAreaProps } from "@mantine/core";
-import { IconSelector } from "@tabler/icons";
+import {
+  Stack,
+  Box,
+  Divider,
+  ScrollAreaProps,
+  Group,
+  Flex,
+  ActionIcon,
+} from "@mantine/core";
+import { IconAdjustments, IconEdit, IconEditCircle, IconSelector, IconSettings, IconSettingsAutomation } from "@tabler/icons";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLoaderData, useParams } from "react-router-dom";
 import { z } from "zod";
-import { UserButton } from "../../components/UserButton";
+import { ColorSchemeToggle } from "../../components/ColorSchemeToggle";
+import { ChatProfile } from "../../components/ChatProfile";
 import useAuth from "../../hooks/useAuth";
 import { useChatContext } from "../../layouts/ChatLayout";
 import socket from "../../lib/socketio";
-import { ChatType, Message, User } from "../../types";
+import { Channel, ChatType, Message, User } from "../../types";
 import Messages from "./messages";
 
 function Page() {
-  const data = useLoaderData() as User;
-  const { getMessages,  room } = useChatContext();
+  const data = useLoaderData() as User | Channel;
+  const { getMessages, room } = useChatContext();
   const viewport = useRef<HTMLDivElement>(null);
 
   // const scrollToBottom = () => {
@@ -24,7 +33,6 @@ function Page() {
   //     viewport.current.scrollIntoView();
   //   }
   // };
-
 
   // const handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"] =
   //   (position) => {
@@ -55,12 +63,29 @@ function Page() {
       justify={"space-between"}
     >
       <Box>
-        <UserButton
-          image={data.avatar}
-          name={data.name}
-          email={data.email}
-          icon={<IconSelector size={14} stroke={1.5} />}
-        />
+        <Flex>
+          <ChatProfile />
+          <Flex justify={"center"} align="center" gap={16}>
+            <ActionIcon
+              // onClick={() => toggleColorScheme()}
+              size="lg"
+              sx={(theme) => ({
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[6]
+                    : theme.colors.gray[0],
+                color:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.yellow[4]
+                    : theme.colors.blue[6],
+              })}
+            >
+              <IconAdjustments />
+            </ActionIcon>
+            <ColorSchemeToggle />
+          </Flex>
+        </Flex>
+
         <Divider mx={"-md"} />
       </Box>
       <Messages

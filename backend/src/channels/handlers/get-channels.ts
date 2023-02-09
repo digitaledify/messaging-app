@@ -5,7 +5,15 @@ import db from "../../../lib/db";
 const getChannelsHandler: RequestHandler = async (req, res, next) => {
   let channels;
   try {
-    channels = await db.channel.findMany({});
+    channels = await db.channel.findMany({
+      include: {
+        users: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2025") {

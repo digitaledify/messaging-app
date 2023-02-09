@@ -2,7 +2,7 @@ import { generatePath, LoaderFunction } from "react-router-dom";
 import { z } from "zod";
 import http from "../../lib/http";
 import { ChatPageParamsSchema } from "../../lib/zod-schemas";
-import { Channel, User } from "../../types";
+import { Channel, ChannelWithUsers, User } from "../../types";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const validatedParams = ChatPageParamsSchema.parse(params);
@@ -14,6 +14,6 @@ export const loader: LoaderFunction = async ({ params }) => {
       : generatePath("/channels/:channelName", {
           channelName: validatedParams.name,
         });
-  const res = await http.get<(User | Channel)[]>(url);
+  const res = await http.get<(User | ChannelWithUsers)[]>(url);
   return res.data;
 };

@@ -79,7 +79,7 @@ function CreateChannelModal() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={"xl"}>
+      <Stack spacing={"md"}>
         <TextInput
           {...register("name")}
           label="Channel name"

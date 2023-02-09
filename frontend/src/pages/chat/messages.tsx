@@ -26,7 +26,7 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
 ) {
   const auth = useAuth();
   const [text, setText] = useState("");
-  const { usernameOrChannelName, chatType ,room} = useChatContext();
+  const { usernameOrChannelName, chatType, room } = useChatContext();
   const handleMessageSubmit: React.KeyboardEventHandler<HTMLInputElement> = (
     event
   ) => {
@@ -134,7 +134,6 @@ const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messages(
             );
           })}
         </Stack>
-        <div id="ghost">{room}</div>
       </ScrollArea>
       <Box>
         <TextInput

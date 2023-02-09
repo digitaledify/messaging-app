@@ -19,6 +19,8 @@ import {
   IconSearch,
   IconPlus,
   IconMessageCircle,
+  IconUserCircle,
+  IconSettings2,
 } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
 import { generatePath, Link, NavLink } from "react-router-dom";
@@ -29,6 +31,7 @@ import QueryKeys from "../lib/query-keys";
 import { ColorSchemeToggle } from "./ColorSchemeToggle";
 import openCreateChannel from "./modals/CreateChannelModal";
 import CreateChannelModal from "./modals/CreateChannelModal";
+import { ChatProfile } from "./ChatProfile";
 
 const useStyles = createStyles((theme) => ({
   navbar: {
@@ -59,55 +62,6 @@ const useStyles = createStyles((theme) => ({
     border: `1px solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
     }`,
-  },
-
-  mainLinks: {
-    paddingLeft: theme.spacing.md - theme.spacing.xs,
-    paddingRight: theme.spacing.md - theme.spacing.xs,
-    paddingBottom: theme.spacing.md,
-  },
-
-  mainLink: {
-    display: "flex",
-    alignItems: "center",
-    width: "100%",
-    fontSize: theme.fontSizes.xs,
-    padding: `8px ${theme.spacing.xs}px`,
-    borderRadius: theme.radius.sm,
-    fontWeight: 500,
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[0]
-        : theme.colors.gray[7],
-
-    "&:hover": {
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
-          : theme.colors.gray[0],
-      color: theme.colorScheme === "dark" ? theme.white : theme.black,
-    },
-  },
-
-  mainLinkInner: {
-    display: "flex",
-    alignItems: "center",
-    flex: 1,
-  },
-
-  mainLinkIcon: {
-    marginRight: theme.spacing.sm,
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[2]
-        : theme.colors.gray[6],
-  },
-
-  mainLinkBadge: {
-    padding: 0,
-    width: 20,
-    height: 20,
-    pointerEvents: "none",
   },
 
   collections: {
@@ -147,17 +101,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const links = [
-  { icon: IconBulb, label: "Bot", notifications: 3, to: "/bot" },
-  {
-    icon: IconCheckbox,
-    label: "Notifications",
-    notifications: 4,
-    to: "/notifications",
-  },
-  { icon: IconUser, label: "You", to: "/me" },
-];
-
 export function NavbarSearch() {
   const { classes } = useStyles();
   const usersQuery = useQuery({
@@ -168,25 +111,6 @@ export function NavbarSearch() {
     queryKey: [QueryKeys.channels.channels_list],
     queryFn: getChannelsList,
   });
-
-  const mainLinks = links.map((link) => (
-    <UnstyledButton
-      component={Link}
-      to={link.to}
-      key={link.label}
-      className={classes.mainLink}
-    >
-      <div className={classes.mainLinkInner}>
-        <link.icon size={20} className={classes.mainLinkIcon} stroke={1.5} />
-        <span>{link.label}</span>
-      </div>
-      {link.notifications && (
-        <Badge size="sm" variant="filled" className={classes.mainLinkBadge}>
-          {link.notifications}
-        </Badge>
-      )}
-    </UnstyledButton>
-  ));
 
   const channelLinks = channelsQuery.isSuccess
     ? channelsQuery.data.map((channel) => (
@@ -203,9 +127,6 @@ export function NavbarSearch() {
           className={classes.collectionLink}
         >
           <span>{channel.name}</span>
-          <Text size={"xs"} color="dimmed">
-            {channel.name}
-          </Text>
         </Text>
       ))
     : [];
@@ -227,15 +148,7 @@ export function NavbarSearch() {
             key={user.email}
             className={classes.collectionLink}
           >
-            <span>
-              {user.name}
-              {auth.user?.username === user.username ? (
-                <IconUser size={14} />
-              ) : null}
-            </span>
-            <Text size={"xs"} color="dimmed">
-              {user.email}
-            </Text>
+            <span>{user.name}</span>
           </Text>
         ))
     : [];
@@ -245,31 +158,39 @@ export function NavbarSearch() {
       <Navbar.Section className={classes.section}>
         <Group px={"md"} h={80} position="apart">
           <Group spacing={"xs"}>
-            <IconMessageCircle size={"40"} />
             <Title variant="gradient" fw={"bold"} ff="monospace" order={1}>
               CHAT
             </Title>
           </Group>
-          <ColorSchemeToggle />
+          <ActionIcon component={NavLink} to="/me">
+            <IconSettings2 color="blue" />
+          </ActionIcon>
         </Group>
       </Navbar.Section>
 
-      <TextInput
-        placeholder="Search"
-        size="xs"
-        px={"md"}
-        icon={<IconSearch size={12} stroke={1.5} />}
-        rightSectionWidth={70}
-        rightSection={<Code className={classes.searchCode}>Ctrl + K</Code>}
-        styles={{ rightSection: { pointerEvents: "none" } }}
-        mb="sm"
-      />
-
       <Navbar.Section className={classes.section}>
-        <div className={classes.mainLinks}>{mainLinks}</div>
+        <TextInput
+          placeholder="Search"
+          size="xs"
+          px={"md"}
+          icon={<IconSearch size={12} stroke={1.5} />}
+          rightSectionWidth={70}
+          rightSection={<Code className={classes.searchCode}>Ctrl + K</Code>}
+          styles={{ rightSection: { pointerEvents: "none" } }}
+          mb="sm"
+        />
       </Navbar.Section>
 
       <ScrollArea type="never">
+        <Navbar.Section className={classes.section}>
+          <Group className={classes.collectionsHeader} position="apart">
+            <Text size="xs" weight={500} color="dimmed">
+              Direct messages
+            </Text>
+          </Group>
+          <div className={classes.collections}>{userLinks}</div>
+        </Navbar.Section>
+
         <Navbar.Section className={classes.section}>
           <Group className={classes.collectionsHeader} position="apart">
             <Text size="xs" weight={500} color="dimmed">
@@ -286,15 +207,6 @@ export function NavbarSearch() {
             </Tooltip>
           </Group>
           <div className={classes.collections}>{channelLinks}</div>
-        </Navbar.Section>
-
-        <Navbar.Section className={classes.section}>
-          <Group className={classes.collectionsHeader} position="apart">
-            <Text size="xs" weight={500} color="dimmed">
-              Direct messages
-            </Text>
-          </Group>
-          <div className={classes.collections}>{userLinks}</div>
         </Navbar.Section>
       </ScrollArea>
     </Navbar>

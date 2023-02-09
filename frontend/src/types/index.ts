@@ -46,8 +46,13 @@ export type Message = {
 };
 
 export type Channel = {
-  name: string
-}
+  name: string;
+};
+export type ChannelWithUsers = Channel & {
+  users: {
+    name: string;
+  }[];
+};
 
 export type ChatType = z.infer<typeof ChatTypeSchema>;
 export type ChatPageParams = z.infer<typeof ChatPageParamsSchema>;
