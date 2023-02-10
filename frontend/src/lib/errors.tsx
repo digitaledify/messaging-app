@@ -1,6 +1,7 @@
 import axios from "axios";
 import { z } from "zod";
 import { APIError } from "../types";
+import { destroyAuthState } from "./auth-utils";
 import { notify } from "./notifications";
 
 export function normalizeAPIError(data: APIError): string {
@@ -31,6 +32,11 @@ export function handleAPIError(error: unknown) {
   let message = "Something went wrong.";
   let title = "Error";
   if (axios.isAxiosError(error)) {
+    if (error.response?.status === 401) {
+      destroyAuthState();
+      history.replaceState(undefined, "", "/sign-in");
+      return;
+    }
     message = normalizeAPIError(error.response?.data);
     title = "Error";
   }

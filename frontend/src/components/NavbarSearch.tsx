@@ -22,6 +22,7 @@ import { getChannelsList } from "../lib/api/channels";
 import { getUsersList } from "../lib/api/users";
 import QueryKeys from "../lib/query-keys";
 import { ChatPageParamsSchema } from "../lib/zod-schemas";
+import { ChatPageParams } from "../types";
 import openCreateChannel from "./modals/CreateChannelModal";
 
 const useStyles = createStyles((theme) => {
@@ -108,7 +109,7 @@ export function NavbarSearch() {
   });
 
   const auth = useAuth();
-  const params = ChatPageParamsSchema.parse(useParams());
+  const params = useParams<ChatPageParams>();
 
   const foucsChatTextInput = () => {
     const element = document.getElementById(
