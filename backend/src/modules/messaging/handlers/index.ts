@@ -53,7 +53,7 @@ export const handleGetMessages: SocketEventHandler<
         : { channelName: to };
     const take = 20;
     const orderBy = {
-      time: "asc",
+      time: "desc",
     } as const;
     
     if (!cursor) {

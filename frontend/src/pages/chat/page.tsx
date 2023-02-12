@@ -9,8 +9,6 @@ import DeleteChannel from "./components/DeleteChannel";
 
 function Page() {
   const { getMessages, room } = useChatContext();
-  const viewport = useRef<HTMLDivElement>(null);
-
   const messages = getMessages(room);
 
   return (
@@ -50,8 +48,7 @@ function Page() {
         <Divider mx={"-md"} />
       </Box>
       <Messages
-        ref={viewport}
-        // handleScrollPositionChange={handleScrollPositionChange}
+        // fetchPreviousMessages={fetchPreviousMessages}
         messages={messages}
       />
     </Stack>

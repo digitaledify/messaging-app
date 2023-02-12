@@ -116,11 +116,15 @@ export function NavbarSearch() {
       "chat-text-input"
     ) as HTMLInputElement | null;
     element?.focus();
+    const scrollToBottom = () => {
+      const element = document.getElementById("scroll-end-element");
+      element?.scrollIntoView();
+    };
+    scrollToBottom();
   };
   const userLinks = usersQuery.isSuccess
-    ? matchSorter(usersQuery.data, search, { keys: ["username", "name"] })
-        .filter((user) => user.username !== auth.user?.username)
-        .map((user) => {
+    ? matchSorter(usersQuery.data, search, { keys: ["username", "name"] }).map(
+        (user) => {
           const isLinkActive =
             params.chatType === "dm" && params.name === user.username;
           return (
@@ -142,7 +146,8 @@ export function NavbarSearch() {
               <span>{user.name}</span>
             </Text>
           );
-        })
+        }
+      )
     : [];
 
   const channelLinks = channelsQuery.isSuccess

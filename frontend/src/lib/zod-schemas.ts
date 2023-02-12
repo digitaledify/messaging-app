@@ -16,7 +16,7 @@ export const EmailSchema = z
 
 export const SignUpDataSchema = SignInDataSchema.merge(
   z.object({
-    name: z.string().trim(),
+    name: z.string().trim().min(6),
     email: EmailSchema,
   })
 );

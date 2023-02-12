@@ -1,4 +1,3 @@
-import { ScrollAreaProps } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
@@ -12,12 +11,16 @@ interface ChatContext {
   usernameOrChannelName: string;
   sendMessage: (message: CreateMessageData) => void;
   chatType: ChatType;
-  handleScrollPositionChange: (position: { x: number; y: number }) => void;
+  fetchPreviousMessages: (cursor: string) => void;
+  cursor: string | null;
+  isLoading: boolean;
+  isInitialMessagesFetched: boolean;
 }
 
 function ChatLayout() {
   const [messages, setMessages] = useState(new Map<string, Message[]>());
   const [cursors, setCursors] = useState(new Map<string, string | null>());
+  const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
 
   console.log(useParams());
@@ -27,10 +30,14 @@ function ChatLayout() {
       ? [auth.user?.username, params.name].sort().join("-")
       : params.name;
   const usernameOrChannelName = params.name;
+  console.log("🚀 ~ file: ChatLayout.tsx:29 ~ ChatLayout ~ room", room);
 
   // Listen for new messages
   useEffect(() => {
     socket.on("messages:new_message", (message) => {
+      const room = message.channelName
+        ? message.channelName
+        : [message.fromUsername, message.toUsername].sort().join("-");
       console.log("new message", message);
       setMessages((messages) => {
         return new Map(messages).set(room, [
@@ -43,7 +50,7 @@ function ChatLayout() {
     return () => {
       socket.off("messages:new_message");
     };
-  }, [room]);
+  }, []);
 
   // Fetch old initial 20 messages
   const isInitialMessagesFetched = messages.has(room);
@@ -51,14 +58,23 @@ function ChatLayout() {
     if (isInitialMessagesFetched) {
       return;
     }
+    setIsLoading(true);
     socket.emit(
       "messages:get_old_messages",
       null,
       params.chatType,
       usernameOrChannelName,
       (page) => {
-        setMessages((messages) => new Map(messages).set(room, [...page.data]));
+        setMessages((messages) =>
+          new Map(messages).set(room, page.data.reverse())
+        );
         setCursors((cursors) => new Map(cursors).set(room, page.nextCursor));
+        setIsLoading(false);
+        const scrollToBottom = () => {
+          const element = document.getElementById("scroll-end-element");
+          element?.scrollIntoView();
+        };
+        scrollToBottom();
       }
     );
   }, [isInitialMessagesFetched, params.chatType, room, usernameOrChannelName]);
@@ -67,28 +83,25 @@ function ChatLayout() {
     socket.emit("messages:new_message", message);
   };
 
-  const handleScrollPositionChange: ScrollAreaProps["onScrollPositionChange"] =
-    (postion) => {
-      const cursor = cursors.get(room) || null;
-      if (postion.y > 200 || !cursor) {
-        return;
+  const fetchPreviousMessages = (cursor: string) => {
+    setIsLoading(true);
+    socket.emit(
+      "messages:get_old_messages",
+      cursor,
+      params.chatType,
+      usernameOrChannelName,
+      (page) => {
+        setMessages((messages) =>
+          new Map(messages).set(room, [
+            ...page.data.reverse(),
+            ...(messages.get(room) || []),
+          ])
+        );
+        setCursors((cursors) => new Map(cursors).set(room, page.nextCursor));
+        setIsLoading(false);
       }
-      socket.emit(
-        "messages:get_old_messages",
-        cursor,
-        params.chatType,
-        room,
-        (page) => {
-          setMessages((messages) =>
-            new Map(messages).set(room, [
-              ...(messages.get(room) || []),
-              ...page.data,
-            ])
-          );
-          setCursors((cursors) => new Map(cursors).set(room, page.nextCursor));
-        }
-      );
-    };
+    );
+  };
 
   const context: ChatContext = {
     getMessages(room) {
@@ -98,7 +111,10 @@ function ChatLayout() {
     sendMessage,
     chatType: params.chatType,
     usernameOrChannelName,
-    handleScrollPositionChange,
+    fetchPreviousMessages,
+    cursor: cursors.get(room) || null,
+    isLoading,
+    isInitialMessagesFetched,
   };
 
   return (

@@ -9,10 +9,10 @@ const getChannelsHandler: RequestHandler = async (req, res, next) => {
       include: {
         users: {
           select: {
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
