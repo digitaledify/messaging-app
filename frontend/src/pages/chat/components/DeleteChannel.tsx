@@ -1,4 +1,5 @@
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Text } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
 import { IconTrash } from "@tabler/icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { generatePath, useNavigate, useParams } from "react-router-dom";
@@ -34,7 +35,25 @@ function DeleteChannel() {
   });
 
   const handleDeleteChannel = () => {
-    mutation.mutate(name as string);
+    const openDeleteConfirmarionModal = () =>
+      openConfirmModal({
+        title: "Please confirm your action",
+        centered: true,
+        children: (
+          <Text size="sm">
+            Are you sure you want to delete this channel? This action is not
+            reversable.
+          </Text>
+        ),
+        labels: { confirm: "Confirm", cancel: "Cancel" },
+        confirmProps: {
+          color: "red",
+        },
+        onConfirm: () => {
+          mutation.mutate(name as string);
+        },
+      });
+    openDeleteConfirmarionModal();
   };
 
   return (
