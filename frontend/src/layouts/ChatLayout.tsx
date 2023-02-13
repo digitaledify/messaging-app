@@ -23,14 +23,12 @@ function ChatLayout() {
   const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
 
-  console.log(useParams());
   const params = ChatPageParamsSchema.parse(useParams());
   const room =
     params.chatType === "dm"
       ? [auth.user?.username, params.name].sort().join("-")
       : params.name;
   const usernameOrChannelName = params.name;
-  console.log("🚀 ~ file: ChatLayout.tsx:29 ~ ChatLayout ~ room", room);
 
   // Listen for new messages
   useEffect(() => {
@@ -38,7 +36,6 @@ function ChatLayout() {
       const room = message.channelName
         ? message.channelName
         : [message.fromUsername, message.toUsername].sort().join("-");
-      console.log("new message", message);
       setMessages((messages) => {
         return new Map(messages).set(room, [
           ...(messages.get(room) || []),

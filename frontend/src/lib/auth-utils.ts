@@ -29,10 +29,7 @@ export function retriveAuthState(): AuthState | null {
   try {
     authState = JSON.parse(authStateSerialized) as AuthState;
   } catch (error) {
-    console.log(
-      "🚀 ~ file: auth-utils.ts:31 ~ retriveAuthState ~ error",
-      error
-    );
+    console.error(error);
     return null;
   }
 

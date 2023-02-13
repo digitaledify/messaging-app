@@ -12,16 +12,15 @@ import {
   clsx,
   CSSObject,
 } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
 import { IconSearch, IconPlus, IconUser } from "@tabler/icons";
 import { useQuery } from "@tanstack/react-query";
 import { matchSorter } from "match-sorter";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { generatePath, NavLink, useParams } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
 import { getChannelsList } from "../lib/api/channels";
 import { getUsersList } from "../lib/api/users";
 import QueryKeys from "../lib/query-keys";
-import { ChatPageParamsSchema } from "../lib/zod-schemas";
 import { ChatPageParams } from "../types";
 import openCreateChannel from "./modals/CreateChannelModal";
 
@@ -108,8 +107,20 @@ export function NavbarSearch() {
     queryFn: getChannelsList,
   });
 
-  const auth = useAuth();
   const params = useParams<ChatPageParams>();
+  const searchRef = useRef<HTMLInputElement>(null);
+  useHotkeys(
+    [
+      [
+        "mod+K",
+        () => {
+          searchRef.current?.focus();
+        },
+      ],
+    ],
+    [],
+    true
+  );
 
   const foucsChatTextInput = () => {
     const element = document.getElementById(
@@ -198,6 +209,7 @@ export function NavbarSearch() {
         <TextInput
           placeholder="Search"
           size="xs"
+          ref={searchRef}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           px={"md"}

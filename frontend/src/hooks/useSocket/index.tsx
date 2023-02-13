@@ -7,7 +7,6 @@ import socket from "../../lib/socketio";
 function useSocket() {
   const auth = useAuth();
   const [isConnected, setIsConnected] = useState(false);
-  console.log("🚀 ~ file: index.tsx:10 ~ useSocket ~ isConnected", isConnected);
 
   // Connect to socket after user authentication
   useEffect(() => {

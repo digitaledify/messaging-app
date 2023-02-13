@@ -1,5 +1,5 @@
-import { loader } from "./loader";
-import Page from "./page";
+import { loader } from "./services/loader";
+import Page from "./components/Page";
 
 const chatPage = { loader, Page };
 

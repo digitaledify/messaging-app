@@ -1,9 +1,9 @@
 import { Stack, Box, Divider, Flex } from "@mantine/core";
-import { ColorSchemeToggle } from "../../components/ColorSchemeToggle";
-import { ChatProfile } from "../../components/ChatProfile";
-import { useChatContext } from "../../layouts/ChatLayout";
-import Messages from "./messages";
-import DeleteChannel from "./components/DeleteChannel";
+import { ColorSchemeToggle } from "../../../components/ColorSchemeToggle";
+import { ChatProfile } from "../../../components/ChatProfile";
+import { useChatContext } from "../../../layouts/ChatLayout";
+import Messages from "./Messages";
+import DeleteChannel from "./DeleteChannel";
 
 function Page() {
   const { getMessages, room, chatType } = useChatContext();

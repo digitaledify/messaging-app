@@ -9,11 +9,12 @@ import { SignUp } from "./pages/sign-up";
 import chatPage from "./pages/chat";
 import GenericError from "./components/GenericError";
 import ChatLayout from "./layouts/ChatLayout";
+import { ErrorPage } from "./pages/error-page";
 
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
-    // errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "sign-in",

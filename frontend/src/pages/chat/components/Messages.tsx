@@ -10,11 +10,11 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSend } from "@tabler/icons";
-import { forwardRef, useEffect, useState } from "react";
-import useAuth from "../../hooks/useAuth";
-import { useChatContext } from "../../layouts/ChatLayout";
-import socket from "../../lib/socketio";
-import { Message } from "../../types";
+import { useEffect, useState } from "react";
+import useAuth from "../../../hooks/useAuth";
+import { useChatContext } from "../../../layouts/ChatLayout";
+import socket from "../../../lib/socketio";
+import { Message } from "../../../types";
 
 type MessagesProps = {
   messages: Message[];
@@ -58,16 +58,8 @@ function Messages(props: MessagesProps) {
 
   useEffect(() => {
     const observeTarget = document.getElementById("fetch-previous-messages");
-    console.log(
-      "🚀 ~ file: messages.tsx:45 ~ useEffect ~ observeTarget",
-      observeTarget
-    );
     const rootViewport = document.querySelector(
       "#messages-scrollarea > .mantine-ScrollArea-viewport"
-    );
-    console.log(
-      "🚀 ~ file: messages.tsx:49 ~ useEffect ~ rootViewport",
-      rootViewport
     );
 
     if (!observeTarget || !rootViewport) {

@@ -27,7 +27,6 @@ function Me() {
       avatar: auth.user?.avatar || avatarSampleSrc,
     },
   });
-  console.log("🚀 ~ file: me.tsx:21 ~ Me ~ errors", errors);
 
   const mutation = useMutation({
     mutationKey: [QueryKeys.users.update_user, auth.user?.username],
@@ -48,7 +47,6 @@ function Me() {
   });
 
   const onSubmit = (data: UpdateUserData) => {
-    console.log("🚀 ~ file: me.tsx:46 ~ onSubmit ~ data", data);
     mutation.mutate(data);
   };
 
