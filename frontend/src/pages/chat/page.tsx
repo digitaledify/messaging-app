@@ -1,5 +1,4 @@
-import { Stack, Box, Divider, Flex, ActionIcon } from "@mantine/core";
-import { IconAdjustments } from "@tabler/icons";
+import { Stack, Box, Divider, Flex } from "@mantine/core";
 import { ColorSchemeToggle } from "../../components/ColorSchemeToggle";
 import { ChatProfile } from "../../components/ChatProfile";
 import { useChatContext } from "../../layouts/ChatLayout";
@@ -23,27 +22,7 @@ function Page() {
         <Flex>
           <ChatProfile />
           <Flex justify={"center"} align="center" gap={16}>
-            {chatType === "channel" ? (
-              <>
-                <ActionIcon
-                  // onClick={() => toggleColorScheme()}
-                  size="lg"
-                  sx={(theme) => ({
-                    backgroundColor:
-                      theme.colorScheme === "dark"
-                        ? theme.colors.dark[6]
-                        : theme.colors.gray[0],
-                    color:
-                      theme.colorScheme === "dark"
-                        ? theme.colors.yellow[4]
-                        : theme.colors.blue[6],
-                  })}
-                >
-                  <IconAdjustments />
-                </ActionIcon>
-                <DeleteChannel />
-              </>
-            ) : null}
+            {chatType === "channel" ? <DeleteChannel /> : null}
             <ColorSchemeToggle />
           </Flex>
         </Flex>
