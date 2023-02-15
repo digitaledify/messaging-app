@@ -1,0 +1,28 @@
+services:
+  frontend:
+    build:
+      context: frontend/
+    ports:
+      - "80:80"
+    env_file:
+      - frontend/.env
+
+  backend:
+    build:
+      context: backend/
+    ports:
+      - "8080:8080"
+    env_file:
+      - backend/.env
+
+  database:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=itjustworks
+    volumes:
+      - pgdata:/var/lib/postgresql/data:rw
+
+volumes:
+  pgdata:

@@ -1,20 +1,21 @@
 import { z } from "zod";
-import appConfig from "../config.json";
+import * as dotenv from "dotenv";
+import { EmailQueryParamsSchema, NumberStringSchema } from "../lib/zod-schemas";
+
+// Load env variables
+dotenv.config();
 
 const configSchema = z.object({
-  port: z.number().default(8080),
-  db: z.object({
-    host: z.string().default("localhost"),
-    port: z.number().default(5432),
-    user: z.string().default("postgres"),
-    password: z.string().default("postgres"),
-    database: z.string().default("postgres"),
-  }),
+  PORT: NumberStringSchema.default("7000"),
+  DATABASE_URL: z.string(),
+  JWT_SECRET: z.string(),
+  SENDGRID_API_KEY: z.string(),
+  FRONTEND_URL: z.string().url().default("http://localhost:5173"),
+  SENDGRID_FROM_EMAIL: EmailQueryParamsSchema.shape.email,
+  OPENAI_API_KEY: z.string().optional(),
+  NODE_ENV: z.enum(["development", "production"]).default("production"),
 });
 
 export type Config = z.infer<typeof configSchema>;
 
-export const config = configSchema.parse({
-  ...appConfig,
-  ...process.env, // Overwrite with environment variables
-});
+export const config = configSchema.parse(process.env);
