@@ -20,9 +20,10 @@
     "zod": "^3.19.1"
   },
   "scripts": {
-    "start": "node build/src/index.js",
+    "start": "node src/index.js",
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
