@@ -19,8 +19,8 @@ RealChat is a chat application build with Node.js and Typescript. It provides a 
 ## Main features
 
 - Authentication using JWT tokens.
-- Private chat.
-- Group chat.
+- Real time private chat.
+- Real time group chat.
 - Black theme support.
 
 ## Run locally with docker
