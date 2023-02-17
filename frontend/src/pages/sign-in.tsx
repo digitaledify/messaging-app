@@ -85,7 +85,7 @@ export function SignIn() {
               {...register("username")}
               label="Username"
               error={errors.username?.message}
-              placeholder="mantine"
+              placeholder="username"
               required
             />
             <PasswordInput

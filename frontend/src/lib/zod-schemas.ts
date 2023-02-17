@@ -3,7 +3,7 @@ import { z } from "zod";
 const PasswordSchema = z.string().min(6);
 
 export const SignInDataSchema = z.object({
-  username: z.string().trim(),
+  username: z.string().trim().min(6),
   password: PasswordSchema,
   rememberMe: z.boolean().default(false),
 });
