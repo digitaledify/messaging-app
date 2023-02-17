@@ -1,7 +1,6 @@
 import { Socket } from "socket.io-client";
 import { APIError, ChatType, CreateMessageData, Message } from ".";
 
-
 export interface ServerToClientEvents {
   noArg: () => void;
   basicEmit: (a: number, b: string, c: boolean) => void;
@@ -22,6 +21,5 @@ export interface ClientToServerEvents {
     callback: (page: { data: Message[]; nextCursor: string | null }) => void
   ) => void;
 }
-
 
 export type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents>;

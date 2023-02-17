@@ -3,11 +3,14 @@
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
   - [Main features](#main-features)
+  - [Run locally with docker](#run-locally-with-docker)
   - [Screenshots](#screenshots)
+    - [Private chat](#private-chat)
+    - [Group chat](#group-chat)
+    - [View all screenshots](#view-all-screenshots)
 - [Techstack](#techstack)
   - [Frontend](#frontend)
   - [Backend](#backend)
-- [Licence](#licence)
 
 # Overview
 
@@ -20,9 +23,37 @@ RealChat is a chat application build with Node.js and Typescript. It provides a 
 - Group chat.
 - Black theme support.
 
+## Run locally with docker
+
+1. Clone the repo
+
+```bash
+git clone https://github.com/ramesh-km/messaging-app.git
+```
+
+2. Run the docker-compose file
+
+```bash
+docker-compose up
+```
+
+3. Open the browser and go to `http://localhost`
+
 ## Screenshots
 
-![Signup](screenshots/signup.png)
+### Private chat
+
+<p align="center">
+  <img  src="./screenshots/private-chat.png">
+</p>
+
+### Group chat
+
+<p align="center">
+  <img  src="./screenshots/group-chat.png">
+</p>
+
+### [View all screenshots](screenshots/screenshots.md)
 
 # Techstack
 
@@ -41,4 +72,6 @@ RealChat is a chat application build with Node.js and Typescript. It provides a 
 - Prisma
 - jsonwebtokens, pino, zod, swagger
 
-# [Licence](LICENSE.md)
+---
+
+[Licence](LICENSE.md)

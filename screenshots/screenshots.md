@@ -1,10 +1,29 @@
+# Signup
 
-# Private chat
+<p align="center">
+  <img  src="./signup.png">
+</p>
 
-# Group chat
+# Create new channel
 
-# Profile updation
+<p align="center">
+  <img  src="./create-new-channel.png">
+</p>
 
-# Channel creation
+# Profile page
 
-# Authentication
+<p align="center">
+  <img  src="./profile-updates.png">
+</p>
+
+# Dark theme
+
+<p align="center">
+  <img  src="./dark-theme.png">
+</p>
+
+# Search users and channels
+
+<p align="center">
+  <img  src="./search-dm-channel.png">
+</p>
