@@ -27,17 +27,39 @@ RealChat is a chat application build with Node.js and Typescript. It provides a 
 
 1. Clone the repo
 
-```bash
-git clone https://github.com/ramesh-km/messaging-app.git
-```
+   ```bash
+   git clone https://github.com/ramesh-km/messaging-app.git
+   ```
 
-2. Run the docker-compose file
+2. Provide the environment variables
 
-```bash
-docker-compose up
-```
+   **Backend** `backend/.env`
 
-3. Open the browser and go to `http://localhost`
+   ```bash
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+   JWT_SECRET=randomsecretstring
+   PORT=8080
+   SENDGRID_API_KEY=sendgridapikey
+   FRONTEND_URL=http://localhost:5173
+   SENDGRID_FROM_EMAIL=send-from-email
+   NODE_ENV=development
+   ```
+
+   **Frontend** `frontend/.env`
+
+   ```bash
+   VITE_APP_TITLE="Chat Application"
+   VITE_API_URL=http://localhost:8080/api/v1
+   VITE_SOCKET_URL=http://localhost:8080
+   ```
+
+3. Run the docker-compose file
+
+   ```bash
+   docker-compose up
+   ```
+
+4. Open the browser and go to `http://localhost`
 
 ## Screenshots
 
