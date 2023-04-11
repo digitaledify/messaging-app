@@ -31,7 +31,8 @@ jobs:
       with:
         push: true
         tags: dlprojects.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_82b3f9199e1f4f92849b62cda44809f0 }}/chat-prod:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./api/Dockerfile
+        context: ./api
 
   deploy:
     runs-on: ubuntu-latest
