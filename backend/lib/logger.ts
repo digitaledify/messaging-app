@@ -9,6 +9,7 @@ const loggerTransportOptions: LoggerOptions["transport"] = {
 };
 const logger = pino({
   transport: loggerTransportOptions,
+  level: "debug",
 });
 
 export function httpLogger() {
