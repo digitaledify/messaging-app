@@ -31,7 +31,8 @@ jobs:
       with:
         push: true
         tags: digitallync.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f169e16f67be4af18e9be0602da4eb18 }}/messagingapp-main:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./backend/Dockerfile
+        context: ./backend
 
   deploy:
     runs-on: ubuntu-latest
