@@ -95,5 +95,3 @@ RealChat is a chat application build with Node.js and Typescript. It provides a 
 - jsonwebtokens, pino, zod, swagger
 
 ---
-
-[Licence](LICENSE.md)
