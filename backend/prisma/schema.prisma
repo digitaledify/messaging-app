@@ -6,35 +6,39 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  username     String    @id @db.VarChar(100)
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  username     String    @unique
   email        String    @unique
   avatar       String?
   name         String
   passwordHash String
-  channels     Channel[]
+  Channel      Channel[] @relation(fields: [channelIds], references: [id])
+  channelIds   String[]  @db.ObjectId
   sent         Message[] @relation("to")
   received     Message[] @relation("from")
+  channelId    String?   @db.ObjectId
 }
 
 model Channel {
-  name    String    @id
-  users   User[]
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name    String    @unique
+  users   User[]    @relation(fields: [userIds], references: [id])
+  userIds String[]  @db.ObjectId
   Message Message[]
 }
 
-// TODO: Add constrain (CHECK ?) on the columns to make sure channelName | toUsername is not null.
 model Message {
-  id           String   @id @default(uuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   text         String
   to           User?    @relation("to", fields: [toUsername], references: [username])
   from         User     @relation("from", fields: [fromUsername], references: [username])
-  toUsername   String?  @db.VarChar(100)
-  fromUsername String   @db.VarChar(100)
+  toUsername   String?
+  fromUsername String
   time         DateTime @default(now())
   toChannel    Channel? @relation(fields: [channelName], references: [name])
   channelName  String?

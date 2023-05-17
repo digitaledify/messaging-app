@@ -5,6 +5,7 @@ import { generatePasswordHash } from "../lib/auth-utils";
 import { Channel } from "@prisma/client";
 
 async function main() {
+  // TODO:
   // Create 5 users
   await db.user.createMany({
     data: await Promise.all(
